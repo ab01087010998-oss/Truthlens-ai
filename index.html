@@ -235,6 +235,52 @@
         "SNS에서 화제된 연예인 사망설 및 해외 긴급 속보의 진위 여부"
       ];
 
+            // URL 파라미터(?report=...) 확인 후 공유받은 리포트 화면 바로 띄우기
+      useEffect(() => {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const reportParam = urlParams.get('report');
+          if (reportParam) {
+            const decodedJson = decodeURIComponent(atob(reportParam));
+            const data = JSON.parse(decodedJson);
+            if (data && typeof data.score === 'number') {
+              setAnalysisResult(data);
+              setActiveTab('report');
+              showToast("공유받은 AI 팩트체크 리포트를 불러왔습니다!");
+            }
+          }
+        } catch (err) {
+          console.warn("공유 데이터 로드 실패:", err);
+        }
+      }, []);
+
+      const handleShareReport = async () => {
+        if (!analysisResult) return;
+        const jsonStr = JSON.stringify(analysisResult);
+        const encoded = btoa(encodeURIComponent(jsonStr));
+        const shareUrl = window.location.origin + window.location.pathname + '?report=' + encoded;
+
+        try {
+          if (navigator.share) {
+            await navigator.share({
+              title: 'TruthLens AI - 팩트체크 리포트',
+              text: '[AI 팩트체크] 신뢰도 점수: ' + analysisResult.score + '/100점 (' + analysisResult.statusText + ')',
+              url: shareUrl
+            }).catch(() => {});
+          } else {
+            await navigator.clipboard.writeText(shareUrl);
+            showToast("리포트 링크가 복사되었습니다! 친구에게 공유해 보세요.");
+          }
+        } catch (err) {
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            showToast("리포트 링크가 복사되었습니다!");
+          } catch(e) {
+            showToast("공유 링크 복사에 실패했습니다.");
+          }
+        }
+      };
+
       const showToast = (msg) => {
         setToastMsg(msg);
         setTimeout(() => setToastMsg(''), 2500);
@@ -525,7 +571,7 @@
 
                       {/* Share Button */}
                       <button
-                        onClick={() => showToast("검증 리포트 공유 링크가 복사되었습니다.")}
+                        onClick={handleShareReport}
                         className="w-full bg-indigo-600/90 hover:bg-indigo-500 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
                       >
                         <ShareIcon className="w-4 h-4" />
