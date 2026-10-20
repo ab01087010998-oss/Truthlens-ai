@@ -578,7 +578,7 @@
                             <span className="text-lg text-slate-500 font-normal"> /100</span>
                           </div>
                           
-                          <div className={inline-block px-3.5 py-1 rounded-full text-xs font-black border }>
+                          <div className={'inline-block px-3.5 py-1 rounded-full text-xs font-black border ' + (analysisResult.badgeColor || '')}>
                             {analysisResult.score >= 85 ? '🟢' : analysisResult.score >= 50 ? '🟡' : '🔴'} {analysisResult.statusText}
                           </div>
 
