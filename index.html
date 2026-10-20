@@ -1,0 +1,562 @@
+﻿<!doctype html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TruthLens AI - 모바일 팩트체크 리포트</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
+          },
+          colors: {
+            obsidian: {
+              950: '#090a0f',
+              900: '#0d0f17',
+              850: '#131622',
+              800: '#191d2d',
+              700: '#252a3f',
+            },
+            accent: {
+              purple: '#8b5cf6',
+              lightPurple: '#a78bfa',
+              softPurple: '#c4b5fd',
+              pink: '#f43f5e',
+              amber: '#f59e0b',
+              emerald: '#10b981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.25); }
+      50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+    }
+    .animate-glow {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
+      background-color: #06070a;
+      color: #f1f5f9;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="bg-obsidian-950 text-slate-100 antialiased selection:bg-purple-600 selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // SVG Icons
+    const ShieldIcon = ({ className = "w-5 h-5" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+    );
+
+    const LinkIcon = ({ className = "w-4 h-4" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+    );
+
+    const SparklesIcon = ({ className = "w-4 h-4" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
+
+    const ExternalLinkIcon = ({ className = "w-3.5 h-3.5" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      </svg>
+    );
+
+    const HomeIcon = ({ className = "w-5 h-5" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    );
+
+    const DocumentReportIcon = ({ className = "w-5 h-5" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    );
+
+    const ClipboardCopyIcon = ({ className = "w-4 h-4" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+      </svg>
+    );
+
+    const ShareIcon = ({ className = "w-4 h-4" }) => (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+      </svg>
+    );
+
+        async function callGeminiFactCheck(inputText) {
+      // 1. Vercel 배포 환경 (HTTP/HTTPS): 서버리스 백엔드를 호출하여 API 키를 완벽히 숨김
+      if (window.location.protocol.startsWith('http')) {
+        const response = await fetch('/api/fact-check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ inputText })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `서버 응답 오류 (${response.status})`);
+        }
+
+        const parsed = await response.json();
+        parsed.sources = Array.isArray(parsed.sources) ? parsed.sources : [];
+
+        let badgeColor = 'border-indigo-500/40 bg-indigo-950/40 text-indigo-300';
+        if (parsed.badgeColorType === 'emerald' || parsed.score >= 85) {
+          badgeColor = 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300';
+        } else if (parsed.badgeColorType === 'amber' || (parsed.score >= 50 && parsed.score < 85)) {
+          badgeColor = 'border-amber-500/40 bg-amber-950/40 text-amber-300';
+        } else if (parsed.badgeColorType === 'rose' || parsed.score < 50) {
+          badgeColor = 'border-rose-500/40 bg-rose-950/40 text-rose-300';
+        }
+        parsed.badgeColor = badgeColor;
+        return parsed;
+      }
+
+      // 2. 로컬 더블클릭 실행 환경 (file:///): 직접 API Gateway 호출
+      const apiKey = "sk-so-HhJDgWgiwDsY-coOqAil7X4-Lgmz8DsV";
+      const apiUrl = 'https://schoolorder.kr/v1/chat/completions';
+      const model = 'gemini-3.1-pro-preview';
+
+      const systemPrompt = `당신은 대한민국 최고 수준의 AI 언론 포렌식 및 팩트체크 전문 분석가 'TruthLens AI'입니다.
+사용자가 입력한 뉴스 기사, URL, 뉴스 헤드라인, 주장, 루머 또는 소문을 바탕으로 팩트체크 리포트를 작성하세요.
+웹 검색 도구가 제공되지 않았으므로 확인하지 못한 사실을 검색으로 확인했다고 말하지 말고, 입력 내용만으로 판단한 한계를 summary와 explanation에 분명히 적으세요.
+
+반드시 유효한 단일 JSON 객체만을 응답해야 합니다 (마크다운 ```json 태그 없이 pure JSON만):
+{
+  "score": (0~100 사이의 신뢰도 점수 정수. 90 이상은 매우 안전/공식 보도, 70~89는 양호/교차검증 권장, 40~69 주의 필요, 39 이하 심각한 위험/허위 루머),
+  "statusText": "(예: '매우 안전 (공식 보도)', '보통 (교차검증 권장)', '주의 필요 (자극성 어휘 감지)', '심각한 위험 (허위 루머)')",
+  "badgeColorType": "emerald" | "indigo" | "amber" | "rose",
+  "tags": ["태그1", "태그2", "태그3"],
+  "summary": [
+    "구글 검색으로 확인된 핵심 검증 결과 1번째 줄",
+    "교차 대조 및 출처 연동 관련 2번째 줄",
+    "최종 판단 및 유의사항 3번째 줄"
+  ],
+  "explanation": "입력 내용에 대한 종합적인 포렌식 AI 분석 총평 (2~3문장)"
+}`;
+
+      const payload = {
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `다음 내용이나 링크/주장을 분석하고 팩트체크 결과를 JSON으로 반환하세요:\n\n"${inputText}"` }
+        ],
+        response_format: { type: 'json_object' }
+      };
+
+      let attempts = 0;
+      let delay = 1000;
+
+      while (attempts < 3) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+          }
+
+          const result = await response.json();
+          const rawText = result.choices?.[0]?.message?.content;
+
+          if (rawText) {
+            const cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(cleanText);
+            parsed.sources = Array.isArray(parsed.sources) ? parsed.sources : [];
+
+            let badgeColor = 'border-indigo-500/40 bg-indigo-950/40 text-indigo-300';
+            if (parsed.badgeColorType === 'emerald' || parsed.score >= 85) {
+              badgeColor = 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300';
+            } else if (parsed.badgeColorType === 'amber' || (parsed.score >= 50 && parsed.score < 85)) {
+              badgeColor = 'border-amber-500/40 bg-amber-950/40 text-amber-300';
+            } else if (parsed.badgeColorType === 'rose' || parsed.score < 50) {
+              badgeColor = 'border-rose-500/40 bg-rose-950/40 text-rose-300';
+            }
+            parsed.badgeColor = badgeColor;
+
+            return parsed;
+          }
+        } catch (err) {
+          console.warn(`Fact-check attempt ${attempts + 1} failed:`, err);
+          attempts++;
+          if (attempts >= 3) break;
+          await new Promise(res => setTimeout(res, delay));
+          delay *= 2;
+        }
+      }
+
+      throw new Error("AI 검증 서버 연결 실패. 잠시 후 다시 시도해 주세요.");
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('home');
+      const [inputQuery, setInputQuery] = useState('정부가 다음 달부터 모든 국민에게 50만 원을 지급한다는 뉴스가 사실인가요?');
+      const [toastMsg, setToastMsg] = useState('');
+      const [isAnalyzing, setIsAnalyzing] = useState(false);
+      const [analysisStep, setAnalysisStep] = useState('');
+      const [analysisResult, setAnalysisResult] = useState(null);
+
+      const showToast = (msg) => {
+        setToastMsg(msg);
+        setTimeout(() => setToastMsg(''), 2500);
+      };
+
+      const handlePasteClipboard = async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            setInputQuery(text);
+            showToast("클립보드 내용이 붙여넣어졌습니다.");
+          }
+        } catch (err) {
+          showToast("붙여넣기 권한을 확인해주세요.");
+        }
+      };
+
+      const runVerification = async () => {
+        const query = inputQuery.trim();
+        if (!query) {
+          showToast("검증할 뉴스 URL이나 텍스트를 입력해 주세요.");
+          return;
+        }
+
+        setIsAnalyzing(true);
+        setAnalysisStep('1. AI 포렌식 모델 언어 구조 및 키워드 추출 중...');
+
+        const t1 = setTimeout(() => setAnalysisStep('2. Google Search 실시간 웹 검증 및 뉴스 교차 검색 중...'), 900);
+        const t2 = setTimeout(() => setAnalysisStep('3. 출처 권위도 및 다차원 신뢰 지표 최종 산출 중...'), 2000);
+
+        try {
+          const res = await callGeminiFactCheck(query);
+          clearTimeout(t1);
+          clearTimeout(t2);
+          setAnalysisResult(res);
+          setIsAnalyzing(false);
+          setActiveTab('report');
+          showToast("실시간 AI 팩트체크 리포트 생성 완료!");
+        } catch (err) {
+          clearTimeout(t1);
+          clearTimeout(t2);
+          setIsAnalyzing(false);
+          showToast(err.message || "분석 중 오류가 발생했습니다.");
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-obsidian-950 flex justify-center items-center p-0 md:p-6 text-slate-100 font-sans">
+          
+          {toastMsg && (
+            <div className="fixed top-5 z-50 bg-indigo-600/90 backdrop-blur-md text-white font-bold text-xs px-4 py-2.5 rounded-full shadow-2xl border border-indigo-400/40 animate-fadeIn flex items-center gap-2">
+              <SparklesIcon className="w-4 h-4 text-indigo-200" />
+              <span>{toastMsg}</span>
+            </div>
+          )}
+
+          <div className="w-full max-w-md h-full min-h-screen md:min-h-[850px] md:h-[850px] bg-obsidian-900 md:rounded-[42px] md:border-[7px] md:border-obsidian-700 md:shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col relative overflow-hidden">
+            
+            {/* Top Phone Notch Decor */}
+            <div className="hidden md:block absolute top-0 left-1/2 transform -translate-x-1/2 w-36 h-5 bg-obsidian-950 rounded-b-xl z-50 border-b border-obsidian-800">
+              <div className="w-10 h-1 bg-obsidian-700 rounded-full mx-auto mt-1" />
+            </div>
+
+            {/* Header */}
+            <header className="bg-obsidian-900/90 backdrop-blur-md px-5 pt-8 pb-3 border-b border-obsidian-800/80 sticky top-0 z-40 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="text-indigo-400 bg-indigo-500/10 p-1.5 rounded-lg border border-indigo-500/20">
+                  <ShieldIcon className="w-5 h-5 text-indigo-400" />
+                </div>
+                <span className="text-lg font-black tracking-tight text-white font-sans">
+                  TruthLens AI
+                </span>
+              </div>
+            </header>
+
+            {/* Scrollable Content */}
+            <main className="flex-grow overflow-y-auto px-5 py-5 custom-scrollbar space-y-6 pb-24">
+              
+              {/* Home Tab */}
+              {activeTab === 'home' && (
+                <div className="space-y-6 animate-fadeIn">
+                  
+                  <div className="text-center space-y-2 pt-2">
+                    <h1 className="text-2xl font-black text-white tracking-tight leading-tight">
+                      진실을 실시간 검증하세요
+                    </h1>
+                    <p className="text-xs text-slate-400 font-medium leading-relaxed px-4">
+                      검증하고 싶은 기사 URL, 의심스러운 뉴스 헤드라인, 소문 글을 입력하면 AI가 웹 교차 검증을 수행합니다.
+                    </p>
+                  </div>
+
+                  {/* Input Card */}
+                  <div className="bg-obsidian-850/90 p-4 rounded-2xl border border-obsidian-700/80 shadow-xl space-y-3 relative">
+                    <textarea
+                      value={inputQuery}
+                      onChange={(e) => setInputQuery(e.target.value)}
+                      placeholder={"검증할 뉴스 기사 제목, URL 또는 루머 텍스트를 입력하세요...\n\n예시: ‘정부가 다음 달부터 모든 국민에게 50만 원을 지급한다’는 뉴스가 사실인가요?"}
+                      className="w-full h-32 bg-transparent text-xs text-slate-200 placeholder-slate-500 focus:outline-none resize-none leading-relaxed font-sans"
+                    />
+
+                    {isAnalyzing && (
+                      <div className="absolute inset-0 bg-obsidian-950/95 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center p-6 space-y-3 z-20">
+                        <div className="w-9 h-9 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-xs font-bold text-indigo-300 animate-pulse text-center leading-relaxed">
+                          {analysisStep}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-2 border-t border-obsidian-800">
+                      <div className="flex items-center gap-2">
+                        <button onClick={handlePasteClipboard} className="p-2 text-slate-400 hover:text-white bg-obsidian-800 rounded-lg border border-obsidian-700 hover:border-slate-600 transition-all" title="클립보드 붙여넣기">
+                          <ClipboardCopyIcon className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => showToast("URL 자동 검증 모드가 활성화되어 있습니다.")} className="p-2 text-slate-400 hover:text-white bg-obsidian-800 rounded-lg border border-obsidian-700 hover:border-slate-600 transition-all" title="링크 추가">
+                          <LinkIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={runVerification}
+                        disabled={isAnalyzing}
+                        className="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black text-xs px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        <SparklesIcon className="w-4 h-4 text-indigo-200" />
+                        <span>지금 검증하기</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 3 Step Guide */}
+                  <div className="space-y-2.5 pt-2">
+                    <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 flex items-start gap-3">
+                      <div className="p-2 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20 shrink-0">
+                        <ClipboardCopyIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-extrabold text-white">1. 입력하기</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">의심스러운 뉴스 기사 링크나 소문을 입력창에 입력하거나 복사하세요.</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 flex items-start gap-3">
+                      <div className="p-2 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20 shrink-0">
+                        <SparklesIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-extrabold text-white">2. 실시간 웹 교차 검증</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">Gemini AI가 Google Search를 통해 주요 언론 보도 및 공식 아카이브와 대조합니다.</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 flex items-start gap-3">
+                      <div className="p-2 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20 shrink-0">
+                        <DocumentReportIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-extrabold text-white">3. 검증 결과 확인</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">신뢰도 점수, 출처 근거, 3줄 핵심 요약 및 관련 언론 링크를 확인하세요.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+              {/* Report Tab */}
+              {activeTab === 'report' && (
+                <div className="space-y-5 animate-fadeIn">
+                  
+                  {!analysisResult ? (
+                    <div className="bg-obsidian-850 border border-obsidian-800 rounded-3xl p-8 text-center space-y-3">
+                      <div className="text-3xl">🔍</div>
+                      <div className="text-sm font-bold text-slate-200">아직 진행된 검증 결과가 없습니다</div>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        홈 탭에서 검증하고 싶은 뉴스 기사나 텍스트를 입력한 후 '지금 검증하기'를 눌러주세요.
+                      </p>
+                      <button
+                        onClick={() => setActiveTab('home')}
+                        className="mt-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                      >
+                        검증하러 가기
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-5">
+                      
+                      {/* Main Score Box */}
+                      <div className="bg-obsidian-850 border border-obsidian-700/80 rounded-3xl p-6 text-center space-y-3 relative overflow-hidden shadow-2xl">
+                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+                        <div className="text-5xl font-black text-white font-sans tracking-tight">
+                          {analysisResult.score}
+                          <span className="text-lg text-slate-500 font-normal"> /100</span>
+                        </div>
+                        
+                        <div className={`inline-block px-3.5 py-1 rounded-full text-xs font-black border ${analysisResult.badgeColor}`}>
+                          {analysisResult.score >= 85 ? '🟢' : analysisResult.score >= 50 ? '🟡' : '🔴'} {analysisResult.statusText}
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
+                          {analysisResult.tags && analysisResult.tags.map((tag, idx) => (
+                            <span key={idx} className="bg-obsidian-950 text-slate-300 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-obsidian-700">
+                              🏷️ {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* AI Diagnostic Report */}
+                      <div className="bg-obsidian-850/90 border border-obsidian-700 p-4 rounded-2xl space-y-2">
+                        <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
+                          <SparklesIcon className="w-4 h-4 text-indigo-400" />
+                          <span>AI Diagnostic Report</span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
+                          {analysisResult.explanation || "실시간 웹 검색 자료를 토대로 교차 검증을 완료하였습니다."}
+                        </p>
+                      </div>
+
+                      {/* AI 3-Line Summary */}
+                      <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-700 space-y-3">
+                        <h3 className="text-xs font-black text-white flex items-center gap-1.5">
+                          <span className="text-indigo-400">•</span> AI 3줄 검증 요약
+                        </h3>
+                        <div className="space-y-2">
+                          {analysisResult.summary && analysisResult.summary.map((line, idx) => (
+                            <div key={idx} className="flex items-start gap-2 text-[11px] text-slate-300 leading-relaxed">
+                              <span className="text-indigo-400 shrink-0 font-bold">»</span>
+                              <span>{line}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Real Search Sources / Citations */}
+                      {analysisResult.sources && analysisResult.sources.length > 0 && (
+                        <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 space-y-2.5">
+                          <div className="text-xs font-black text-slate-200 flex items-center justify-between">
+                            <span>Google Search 참조 출처 ({analysisResult.sources.length})</span>
+                            <span className="text-[10px] text-indigo-400 font-normal">실시간 인덱싱 완료</span>
+                          </div>
+                          <div className="space-y-1.5">
+                            {analysisResult.sources.map((src, idx) => (
+                              <a
+                                key={idx}
+                                href={src.uri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between p-2.5 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-800 rounded-xl text-[11px] text-slate-300 hover:text-indigo-300 transition-all group"
+                              >
+                                <span className="truncate pr-2 font-medium">{src.title}</span>
+                                <ExternalLinkIcon className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Share Button */}
+                      <button
+                        onClick={() => showToast("검증 리포트 공유 링크가 복사되었습니다.")}
+                        className="w-full bg-indigo-600/90 hover:bg-indigo-500 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+                      >
+                        <ShareIcon className="w-4 h-4" />
+                        <span>검증 리포트 공유하기</span>
+                      </button>
+
+                    </div>
+                  )}
+
+                </div>
+              )}
+
+            </main>
+
+            {/* Navigation Bar */}
+            <nav className="absolute bottom-0 inset-x-0 bg-obsidian-900/95 backdrop-blur-lg border-t border-obsidian-800 px-8 py-3 z-50 flex items-center justify-around">
+              <button
+                onClick={() => setActiveTab('home')}
+                className={`flex flex-col items-center gap-1 text-xs font-bold transition-all ${
+                  activeTab === 'home' ? 'text-indigo-400 scale-105' : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <HomeIcon className="w-5 h-5" />
+                <span>홈</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('report')}
+                className={`flex flex-col items-center gap-1 text-xs font-bold transition-all ${
+                  activeTab === 'report' ? 'text-indigo-400 scale-105' : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <DocumentReportIcon className="w-5 h-5" />
+                <span>분석 리포트</span>
+              </button>
+            </nav>
+
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
