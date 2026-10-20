@@ -338,16 +338,7 @@
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-2 border-t border-obsidian-800">
-                      <div className="flex items-center gap-2">
-                        <button onClick={handlePasteClipboard} className="p-2 text-slate-400 hover:text-white bg-obsidian-800 rounded-lg border border-obsidian-700 hover:border-slate-600 transition-all" title="클립보드 붙여넣기">
-                          <ClipboardCopyIcon className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => showToast("URL 자동 검증 모드가 활성화되어 있습니다.")} className="p-2 text-slate-400 hover:text-white bg-obsidian-800 rounded-lg border border-obsidian-700 hover:border-slate-600 transition-all" title="링크 추가">
-                          <LinkIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-
+                    <div className="flex items-center justify-end pt-2 border-t border-obsidian-800">
                       <button
                         onClick={runVerification}
                         disabled={isAnalyzing}
