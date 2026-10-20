@@ -47,6 +47,8 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <!-- Babel Standalone -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- html2canvas for JPG Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     .custom-scrollbar::-webkit-scrollbar {
@@ -228,6 +230,7 @@
       const [isAnalyzing, setIsAnalyzing] = useState(false);
       const [analysisStep, setAnalysisStep] = useState('');
       const [analysisResult, setAnalysisResult] = useState(null);
+      const [isCapturing, setIsCapturing] = useState(false);
 
       const sampleQueries = [
         "정부가 다음 달부터 모든 국민에게 50만 원을 지급한다는 뉴스가 사실인가요?",
@@ -253,6 +256,61 @@
           console.warn("공유 데이터 로드 실패:", err);
         }
       }, []);
+
+            const handleDownloadImage = async () => {
+        const captureArea = document.getElementById('report-capture-area');
+        if (!captureArea) return;
+
+        setIsCapturing(true);
+        showToast("고화질 리포트 이미지를 생성하는 중...");
+
+        try {
+          const canvas = await html2canvas(captureArea, {
+            scale: 2.5,
+            backgroundColor: '#0d0f17',
+            useCORS: true,
+            logging: false
+          });
+
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              setIsCapturing(false);
+              return;
+            }
+
+            const fileName = 'TruthLens-팩트체크-리포트.jpg';
+            const file = new File([blob], fileName, { type: 'image/jpeg' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({
+                  files: [file],
+                  title: 'TruthLens AI - 팩트체크 리포트',
+                  text: '[팩트체크 결과] 신뢰도: ' + analysisResult.score + '/100점 (' + analysisResult.statusText + ')'
+                });
+                setIsCapturing(false);
+                showToast("리포트 이미지가 공유되었습니다!");
+                return;
+              } catch (e) {
+                // Fallback to download on share cancel
+              }
+            }
+
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+
+            setIsCapturing(false);
+            showToast("고화질 JPG 이미지가 저장되었습니다! 다운로드 폴더를 확인하세요.");
+          }, 'image/jpeg', 0.95);
+
+        } catch (err) {
+          console.error("이미지 캡처 오류:", err);
+          setIsCapturing(false);
+          showToast("이미지 생성에 실패했습니다.");
+        }
+      };
 
       const handleShareReport = async () => {
         if (!analysisResult) return;
@@ -498,86 +556,127 @@
                   ) : (
                     <div className="space-y-5">
                       
-                      {/* Main Score Box */}
-                      <div className="bg-obsidian-850 border border-obsidian-700/80 rounded-3xl p-6 text-center space-y-3 relative overflow-hidden shadow-2xl">
-                        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
-                        <div className="text-5xl font-black text-white font-sans tracking-tight">
-                          {analysisResult.score}
-                          <span className="text-lg text-slate-500 font-normal"> /100</span>
-                        </div>
+                                            {/* Capture Container (Card News Style) */}
+                      <div id="report-capture-area" className="bg-obsidian-900 p-4 rounded-3xl border border-obsidian-800 space-y-4">
                         
-                        <div className={`inline-block px-3.5 py-1 rounded-full text-xs font-black border ${analysisResult.badgeColor}`}>
-                          {analysisResult.score >= 85 ? '🟢' : analysisResult.score >= 50 ? '🟡' : '🔴'} {analysisResult.statusText}
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
-                          {analysisResult.tags && analysisResult.tags.map((tag, idx) => (
-                            <span key={idx} className="bg-obsidian-950 text-slate-300 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-obsidian-700">
-                              🏷️ {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* AI Diagnostic Report */}
-                      <div className="bg-obsidian-850/90 border border-obsidian-700 p-4 rounded-2xl space-y-2">
-                        <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
-                          <SparklesIcon className="w-4 h-4 text-indigo-400" />
-                          <span>AI Diagnostic Report</span>
-                        </div>
-                        <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                          {analysisResult.explanation || "실시간 웹 검색 자료를 토대로 교차 검증을 완료하였습니다."}
-                        </p>
-                      </div>
-
-                      {/* AI 3-Line Summary */}
-                      <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-700 space-y-3">
-                        <h3 className="text-xs font-black text-white flex items-center gap-1.5">
-                          <span className="text-indigo-400">•</span> AI 3줄 검증 요약
-                        </h3>
-                        <div className="space-y-2">
-                          {analysisResult.summary && analysisResult.summary.map((line, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-[11px] text-slate-300 leading-relaxed">
-                              <span className="text-indigo-400 shrink-0 font-bold">»</span>
-                              <span>{line}</span>
+                        {/* Capture Header Decor */}
+                        <div className="flex items-center justify-between pb-2 border-b border-obsidian-800/80">
+                          <div className="flex items-center gap-1.5">
+                            <div className="text-indigo-400 bg-indigo-500/10 p-1 rounded-md border border-indigo-500/20">
+                              <ShieldIcon className="w-3.5 h-3.5 text-indigo-400" />
                             </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Real Search Sources / Citations */}
-                      {analysisResult.sources && analysisResult.sources.length > 0 && (
-                        <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 space-y-2.5">
-                          <div className="text-xs font-black text-slate-200 flex items-center justify-between">
-                            <span>Google Search 참조 출처 ({analysisResult.sources.length})</span>
-                            <span className="text-[10px] text-indigo-400 font-normal">실시간 인덱싱 완료</span>
+                            <span className="text-xs font-black tracking-tight text-white">TruthLens AI</span>
                           </div>
-                          <div className="space-y-1.5">
-                            {analysisResult.sources.map((src, idx) => (
-                              <a
-                                key={idx}
-                                href={src.uri}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-between p-2.5 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-800 rounded-xl text-[11px] text-slate-300 hover:text-indigo-300 transition-all group"
-                              >
-                                <span className="truncate pr-2 font-medium">{src.title}</span>
-                                <ExternalLinkIcon className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 shrink-0" />
-                              </a>
+                          <span className="text-[10px] text-slate-400 font-semibold">실시간 포렌식 팩트체크</span>
+                        </div>
+
+                        {/* Main Score Box */}
+                        <div className="bg-obsidian-850 border border-obsidian-700/80 rounded-2xl p-6 text-center space-y-3 relative overflow-hidden shadow-2xl">
+                          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+                          <div className="text-5xl font-black text-white font-sans tracking-tight">
+                            {analysisResult.score}
+                            <span className="text-lg text-slate-500 font-normal"> /100</span>
+                          </div>
+                          
+                          <div className={inline-block px-3.5 py-1 rounded-full text-xs font-black border }>
+                            {analysisResult.score >= 85 ? '🟢' : analysisResult.score >= 50 ? '🟡' : '🔴'} {analysisResult.statusText}
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
+                            {analysisResult.tags && analysisResult.tags.map((tag, idx) => (
+                              <span key={idx} className="bg-obsidian-950 text-slate-300 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-obsidian-700">
+                                🏷️ {tag}
+                              </span>
                             ))}
                           </div>
                         </div>
-                      )}
 
-                      {/* Share Button */}
-                      <button
-                        onClick={handleShareReport}
-                        className="w-full bg-indigo-600/90 hover:bg-indigo-500 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
-                      >
-                        <ShareIcon className="w-4 h-4" />
-                        <span>검증 리포트 공유하기</span>
-                      </button>
+                        {/* AI Diagnostic Report */}
+                        <div className="bg-obsidian-850/90 border border-obsidian-700 p-4 rounded-2xl space-y-2">
+                          <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
+                            <SparklesIcon className="w-4 h-4 text-indigo-400" />
+                            <span>AI Diagnostic Report</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
+                            {analysisResult.explanation || "실시간 웹 검색 자료를 토대로 교차 검증을 완료하였습니다."}
+                          </p>
+                        </div>
 
+                        {/* AI 3-Line Summary */}
+                        <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-700 space-y-3">
+                          <h3 className="text-xs font-black text-white flex items-center gap-1.5">
+                            <span className="text-indigo-400">•</span> AI 3줄 검증 요약
+                          </h3>
+                          <div className="space-y-2">
+                            {analysisResult.summary && analysisResult.summary.map((line, idx) => (
+                              <div key={idx} className="flex items-start gap-2 text-[11px] text-slate-300 leading-relaxed">
+                                <span className="text-indigo-400 shrink-0 font-bold">»</span>
+                                <span>{line}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Real Search Sources / Citations */}
+                        {analysisResult.sources && analysisResult.sources.length > 0 && (
+                          <div className="bg-obsidian-850 p-4 rounded-2xl border border-obsidian-800 space-y-2.5">
+                            <div className="text-xs font-black text-slate-200 flex items-center justify-between">
+                              <span>Google Search 참조 출처 ({analysisResult.sources.length})</span>
+                              <span className="text-[10px] text-indigo-400 font-normal">실시간 인덱싱 완료</span>
+                            </div>
+                            <div className="space-y-1.5">
+                              {analysisResult.sources.map((src, idx) => (
+                                <a
+                                  key={idx}
+                                  href={src.uri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between p-2.5 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-800 rounded-xl text-[11px] text-slate-300 hover:text-indigo-300 transition-all group"
+                                >
+                                  <span className="truncate pr-2 font-medium">{src.title}</span>
+                                  <ExternalLinkIcon className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 shrink-0" />
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Capture Footer Watermark */}
+                        <div className="pt-2 border-t border-obsidian-800 flex items-center justify-between text-[10px] text-slate-500 font-medium px-1">
+                          <span>TruthLens AI 뉴스 포렌식</span>
+                          <span className="text-indigo-400 font-bold">truthlen-ai.vercel.app</span>
+                        </div>
+
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="space-y-2 pt-1">
+                        <button
+                          onClick={handleDownloadImage}
+                          disabled={isCapturing}
+                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs py-3.5 rounded-xl shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                        >
+                          {isCapturing ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              <span>고화질 JPG 생성 중...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-sm">📸</span>
+                              <span>리포트 이미지(JPG) 저장 / 공유하기</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={handleShareReport}
+                          className="w-full bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700/80 text-slate-300 hover:text-white font-bold text-[11px] py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+                        >
+                          <ShareIcon className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>웹사이트 링크로 공유하기</span>
+                        </button>
+                      </div>
                     </div>
                   )}
 
