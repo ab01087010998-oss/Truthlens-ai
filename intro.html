@@ -1,438 +1,292 @@
 <!doctype html>
-<html lang="ko" class="dark">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TruthLens AI - 소개</title>
-  
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
-          },
-          colors: {
-            obsidian: {
-              950: '#090a0f',
-              900: '#0d0f17',
-              850: '#131622',
-              800: '#191d2d',
-              700: '#252a3f',
-            },
-            accent: {
-              purple: '#8b5cf6',
-              lightPurple: '#a78bfa',
-              softPurple: '#c4b5fd',
-              pink: '#f43f5e',
-              amber: '#f59e0b',
-              emerald: '#10b981',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --ink: #0f172a;
+      --sub: #475569;
+      --line: #e2e8f0;
+      --card: #f8fafc;
+      --accent: #4f46e5;
+      --rose: #e11d48;
+      --emerald: #059669;
+      --amber: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
-      background-color: #06070a;
-      color: #f1f5f9;
-      user-select: none;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #fff;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
+      user-select: none;
     }
-    .custom-scrollbar::-webkit-scrollbar { display: none; }
-    .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.25); }
-      50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+
+    /* 16:9 고정 무대를 화면에 맞춰 축소/확대 */
+    #viewport { flex: 1; position: relative; overflow: hidden; }
+    #stage {
+      position: absolute; left: 50%; top: 50%;
+      width: 1280px; height: 720px;
+      transform-origin: center center;
+      background: #fff;
     }
-    .animate-glow { animation: pulseGlow 3s infinite ease-in-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .slide { display: none; }
-    .slide.active { display: block; }
-    .nav-dot { transition: all 0.3s; }
-    .nav-dot.active { background: #8b5cf6; transform: scale(1.3); }
-    .glass { background: rgba(19, 22, 34, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+    .slide { display: none; position: absolute; inset: 0; padding: 64px 96px; flex-direction: column; }
+    .slide.active { display: flex; }
+
+    /* 공통 제목 영역: 모든 슬라이드에서 같은 위치 */
+    .head { height: 72px; display: flex; align-items: center; gap: 16px; border-bottom: 2px solid var(--line); margin-bottom: 40px; flex-shrink: 0; }
+    .head .bar { width: 6px; height: 36px; border-radius: 3px; background: var(--accent); }
+    .head h2 { font-size: 40px; font-weight: 900; letter-spacing: -0.02em; }
+    .head .no { margin-left: auto; font-size: 18px; font-weight: 700; color: #94a3b8; }
+
+    /* 공통 본문 영역: 남은 높이를 모두 채우고 열 높이를 똑같이 맞춤 */
+    .body { flex: 1; min-height: 0; display: grid; gap: 28px; }
+    .cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 32px; display: flex; flex-direction: column; min-height: 0; }
+    .card h3 { font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+    .cols-3 .card h3 { line-height: 1.3; min-height: 2.6em; }
+    .card .tag { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+    .card p { font-size: 20px; line-height: 1.6; color: var(--sub); }
+    .num { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #fff; background: var(--accent); margin-bottom: 20px; }
+
+    /* 한 칸 안의 항목들: 라벨 열 + 내용 열을 고정 폭으로 정렬 */
+    .rows { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .row { display: grid; grid-template-columns: 112px 1fr; gap: 16px; align-items: start; }
+    .row b { font-size: 18px; font-weight: 700; color: var(--accent); line-height: 1.6; }
+    .row span { font-size: 18px; line-height: 1.6; color: var(--sub); }
+    .items { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .item { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .item b { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .item span { font-size: 16px; line-height: 1.5; color: var(--sub); }
+    .check { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+    .check li { font-size: 22px; line-height: 1.5; color: var(--sub); padding-left: 36px; position: relative; }
+    .check li::before { content: '✓'; position: absolute; left: 0; font-weight: 900; color: var(--c, var(--emerald)); }
+
+    /* 1번: 표지 */
+    .cover { align-items: center; justify-content: center; text-align: center; }
+    .cover .badge { font-size: 18px; font-weight: 700; color: var(--accent); background: #eef2ff; border: 1px solid #c7d2fe; padding: 8px 20px; border-radius: 999px; margin-bottom: 28px; }
+    .cover h1 { font-size: 96px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 24px; }
+    .cover p { font-size: 26px; line-height: 1.6; color: var(--sub); max-width: 900px; margin-bottom: 40px; }
+    .cover .team { display: flex; gap: 12px; }
+    .cover .team span { font-size: 18px; color: var(--sub); border: 1px solid var(--line); background: var(--card); padding: 8px 20px; border-radius: 10px; }
+
+    /* 6번: 하단 주소 */
+    .foot { margin-top: 24px; padding-top: 18px; border-top: 2px solid var(--line); text-align: center; font-size: 16px; color: #94a3b8; flex-shrink: 0; }
+    .foot b { color: var(--accent); margin-right: 10px; }
+
+    /* 하단 컨트롤 */
+    #bar { height: 48px; flex-shrink: 0; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: #fff; }
+    #bar button { font-family: inherit; font-size: 14px; font-weight: 700; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 6px 16px; border-radius: 8px; cursor: pointer; }
+    #bar button:disabled { opacity: .35; cursor: default; }
+    #dots { display: flex; gap: 8px; align-items: center; }
+    #dots i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; cursor: pointer; }
+    #dots i.on { background: var(--accent); transform: scale(1.3); }
+    #count { font-size: 14px; font-weight: 700; color: #94a3b8; width: 70px; }
   </style>
 </head>
-<body class="bg-obsidian-950 text-slate-100 antialiased selection:bg-purple-600 selection:text-white min-h-screen flex flex-col">
+<body>
 
-  <!-- Header -->
-  <header class="bg-obsidian-900/90 backdrop-blur-md border-b border-obsidian-800/80 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 bg-indigo-600/20 rounded-xl flex items-center justify-center border border-indigo-500/30">
-          <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-        </div>
-        <div>
-          <div class="text-lg font-black text-white tracking-tight">TruthLens AI</div>
-          <div class="text-[10px] text-slate-400 font-medium tracking-wider">가짜뉴스 &amp; 유튜브 심층 판독 엔진</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button id="prevBtn" class="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors">이전</button>
-        <button id="nextBtn" class="bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white px-4 py-2 rounded-lg shadow-lg transition-all active:scale-95">다음</button>
-      </div>
-    </div>
-  </header>
+  <div id="viewport">
+    <div id="stage">
 
-  <!-- Slides Container -->
-  <main class="flex-1 relative overflow-hidden flex items-center justify-center">
-    
-    <!-- Slide 1: Title -->
-    <section id="slide1" class="slide active w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="text-center max-w-2xl">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold mb-6 animate-fadeIn">
-          <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-          AI 팩트체크 솔루션
-        </div>
-        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight mb-4 animate-fadeIn" style="animation-delay: 0.1s">
-          TruthLens AI
-        </h1>
-        <p class="text-lg md:text-xl text-slate-300 font-medium mb-8 leading-relaxed animate-fadeIn" style="animation-delay: 0.2s">
-          판독: 멀티미디어 콘텐츠 통합 분석으로 완벽한 신뢰성 검증을 제공하는 AI 팩트체크 솔루션
-        </p>
-        <div class="flex flex-wrap justify-center gap-2 animate-fadeIn" style="animation-delay: 0.3s">
-          <span class="px-3 py-1 rounded-lg bg-obsidian-800 border border-obsidian-700 text-xs text-slate-400">작성자: 박제용</span>
-          <span class="px-3 py-1 rounded-lg bg-obsidian-800 border border-obsidian-700 text-xs text-slate-400">김무성</span>
-          <span class="px-3 py-1 rounded-lg bg-obsidian-800 border border-obsidian-700 text-xs text-slate-400">황채윤</span>
-        </div>
-      </div>
-    </section>
+      <!-- 1. 표지 -->
+      <section class="slide cover active">
+        <div class="badge">AI 팩트체크 솔루션</div>
+        <h1>TruthLens AI</h1>
+        <p>판독: 멀티미디어 콘텐츠 통합 분석으로 완벽한 신뢰성 검증을 제공하는 AI 팩트체크 솔루션</p>
+        <div class="team"><span>작성자: 박제용</span><span>김무성</span><span>황채윤</span></div>
+      </section>
 
-    <!-- Slide 2: Problem Definition -->
-    <section id="slide2" class="slide w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="w-full max-w-3xl h-full flex flex-col">
-        <div class="mb-8">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-4 bg-pink-500 rounded-full"></div>
-            <h2 class="text-2xl font-black text-white">문제 정의</h2>
+      <!-- 2. 문제 정의 -->
+      <section class="slide">
+        <div class="head"><div class="bar" style="background:var(--rose)"></div><h2>문제 정의</h2><div class="no">02</div></div>
+        <div class="body cols-2" style="grid-template-rows: 1fr auto;">
+          <div class="card">
+            <div class="num" style="background:var(--amber)">!</div>
+            <h3>의학·금융·정치 허위정보 확산</h3>
+            <p>개인 피해와 사회적 혼란이 증가하고 있습니다.</p>
+          </div>
+          <div class="card">
+            <div class="num" style="background:var(--amber)">!</div>
+            <h3>기존 검증 방식의 한계</h3>
+            <p>기사·영상·루머를 개별 확인해야 하는 시간 소모적이고 일반 사용자에게 매우 어려운 과정입니다.</p>
+          </div>
+          <div class="card" style="grid-column: 1 / -1; background:#eef2ff; border-color:#c7d2fe;">
+            <h3 style="color:var(--accent)">자동 검증이 필수적입니다</h3>
+            <p>의심스러운 텍스트나 URL을 한 번의 클릭으로 제출하면 즉시 진위 여부와 신뢰도를 판단받을 수 있는 자동화된 팩트체크 솔루션이 필요합니다.</p>
           </div>
         </div>
-        <div class="glass rounded-3xl p-8 md:p-12 shadow-2xl h-full flex flex-col">
-          <div class="space-y-6 flex-1 overflow-y-auto custom-scrollbar pr-2">
-            <div class="flex gap-4 items-start">
-              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-obsidian-700 border border-obsidian-600 flex items-center justify-center text-amber-500 font-bold text-xs">!</div>
-              <div>
-                <div class="text-sm font-bold text-slate-300 mb-1">의학·금융·정치 허위정보 확산</div>
-                <div class="text-slate-400 text-sm leading-relaxed">개인 피해와 사회적 혼란이 증가하고 있습니다.</div>
-              </div>
-            </div>
-            <div class="flex gap-4 items-start">
-              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-obsidian-700 border border-obsidian-600 flex items-center justify-center text-amber-500 font-bold text-xs">!</div>
-              <div>
-                <div class="text-sm font-bold text-slate-300 mb-1">기존 검증 방식의 한계</div>
-                <div class="text-slate-400 text-sm leading-relaxed">기사·영상·루머를 개별 확인해야 하는 시간 소모적이고 일반 사용자에게 매우 어려운 과정입니다.</div>
-              </div>
-            </div>
-            <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4 mt-2">
-              <div class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">자동 검증이 필수적입니다</div>
-              <div class="text-slate-300 text-sm leading-relaxed">
-                의심스러운 텍스트나 URL을 한 번의 클릭으로 제출하면 즉시 진위 여부와 신뢰도를 판단받을 수 있는 자동화된 팩트체크 솔루션이 필요합니다.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Slide 3: Solution -->
-    <section id="slide3" class="slide w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="w-full max-w-4xl h-full flex flex-col">
-        <div class="mb-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-4 bg-emerald-500 rounded-full"></div>
-            <h2 class="text-2xl font-black text-white">솔루션</h2>
+      <!-- 3. 솔루션 -->
+      <section class="slide">
+        <div class="head"><div class="bar" style="background:var(--emerald)"></div><h2>솔루션</h2><div class="no">03</div></div>
+        <div class="body cols-3">
+          <div class="card">
+            <div class="num">01</div>
+            <h3>뉴스·유튜브·쇼츠 통합 분석</h3>
+            <p>다양한 콘텐츠를 통합 분석하며 자막·음성 자동 추출로 텍스트 기반 검증을 수행합니다.</p>
+          </div>
+          <div class="card">
+            <div class="num" style="background:var(--emerald)">02</div>
+            <h3>원문 추적 및 출처 평가</h3>
+            <p>주장의 원문 추적 및 출처 매체 신뢰도 평가로 전문가 의견·공식 자료와 대조하여 신뢰성을 상승시킵니다.</p>
+          </div>
+          <div class="card">
+            <div class="num" style="background:#7c3aed">03</div>
+            <h3>단일 버튼 완전 분석</h3>
+            <p>의심 정보를 붙여넣기만 하면 단일 버튼으로 완전한 분석 결과를 즉시 제공하는 직관적 설계입니다.</p>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-          <!-- 01 -->
-          <div class="glass rounded-3xl p-6 md:p-8 shadow-xl flex flex-col hover:border-indigo-500/40 transition-all group">
-            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-              <span class="text-sm">01</span>
-            </div>
-            <div class="text-sm font-bold text-white mb-2">뉴스·유튜브·쇼츠 통합 분석</div>
-            <div class="text-slate-400 text-xs md:text-sm leading-relaxed flex-1">
-              다양한 콘텐츠를 통합 분석하며 자막·음성 자동 추출로 텍스트 기반 검증을 수행합니다.
-            </div>
-          </div>
-          <!-- 02 -->
-          <div class="glass rounded-3xl p-6 md:p-8 shadow-xl flex flex-col hover:border-emerald-500/40 transition-all group">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-              <span class="text-sm">02</span>
-            </div>
-            <div class="text-sm font-bold text-white mb-2">원문 추적 및 출처 평가</div>
-            <div class="text-slate-400 text-xs md:text-sm leading-relaxed flex-1">
-              주장의 원문 추적 및 출처 매체 신뢰도 평가로 전문가 의견·공식 자료와 대조하여 신뢰성을 상승시킵니다.
-            </div>
-          </div>
-          <!-- 03 -->
-          <div class="glass rounded-3xl p-6 md:p-8 shadow-xl flex flex-col hover:border-purple-500/40 transition-all group">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-              <span class="text-sm">03</span>
-            </div>
-            <div class="text-sm font-bold text-white mb-2">단일 버튼 완전 분석</div>
-            <div class="text-slate-400 text-xs md:text-sm leading-relaxed flex-1">
-              의심 정보를 붙여넣기만 하면 단일 버튼으로 완전한 분석 결과를 즉시 제공하는 직관적 설계입니다.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Slide 4: AI Combination & Anti-Hallucination -->
-    <section id="slide4" class="slide w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="w-full max-w-5xl h-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- AI 조합 -->
-        <div class="glass rounded-3xl p-6 md:p-8 shadow-xl h-full flex flex-col">
-          <div class="mb-4">
-            <div class="flex items-center gap-2">
-              <div class="w-1 h-4 bg-purple-500 rounded-full"></div>
-              <h3 class="text-xl font-black text-white">AI 조합</h3>
+      <!-- 4. AI 조합 / 환각 방지 -->
+      <section class="slide">
+        <div class="head"><div class="bar" style="background:#7c3aed"></div><h2>AI 조합 · 환각 방지</h2><div class="no">04</div></div>
+        <div class="body cols-2">
+          <div class="card">
+            <h3>AI 조합</h3>
+            <div class="tag" style="color:var(--accent)">입력 → 처리 → 출력</div>
+            <div class="rows">
+              <div class="row"><b>입력</b><span>URL·텍스트·이미지 제출</span></div>
+              <div class="row"><b>처리</b><span>OpenWeb 메타데이터 수집 및 핵심 개체 추출 / 유튜브 oEmbed 메타데이터 및 썸네일 분석 / 신뢰도 평가 산출 (출처 및 키워드 기반)</span></div>
+              <div class="row"><b>출력</b><span>3줄 핵심 요약, 진실성 점수, 자극성 지수를 포함한 종합 분석 리포트 제공</span></div>
             </div>
-            <div class="text-xs text-indigo-300 font-bold mb-2 uppercase tracking-wider">입력 → 처리 → 출력</div>
           </div>
-          <div class="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2">
-            <div class="flex gap-3 items-start">
-              <div class="text-indigo-400 font-bold text-xs">입력</div>
-              <div class="text-slate-300 text-xs leading-relaxed">URL·텍스트·이미지 제출</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <div class="text-indigo-400 font-bold text-xs">처리</div>
-              <div class="text-slate-300 text-xs leading-relaxed">OpenWeb 메타데이터 수집 및 핵심 개체 추출 / 유튜브 oEmbed 메타데이터 및 썸네일 분석 / 신뢰도 평가 산출 (출처 및 키워드 기반)</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <div class="text-indigo-400 font-bold text-xs">출력</div>
-              <div class="text-slate-300 text-xs leading-relaxed">3줄 핵심 요약, 진실성 점수, 자극성 지수를 포함한 종합 분석 리포트 제공</div>
+          <div class="card">
+            <h3>환각 방지</h3>
+            <div class="tag" style="color:var(--rose)">검증 프로세스 기반 신뢰성 확보</div>
+            <div class="items">
+              <div class="item"><b style="color:var(--rose)">LLM 단독 응답 의존 배제</b><span>단순 생성형 AI 모델의 자의적 판단으로 인한 환각(Hallucination) 현상을 차단합니다.</span></div>
+              <div class="item"><b style="color:var(--rose)">공개 DB 및 언론사 아카이브 대조</b><span>한국언론진흥재단 등록 공식 언론사 데이터베이스 대조</span></div>
+              <div class="item"><b style="color:var(--rose)">공공 데이터 실시간 크롤링</b><span>위키피디아 Open API 및 기상청·경찰청 등 정부 재난/행정 기관 공개 데이터</span></div>
             </div>
           </div>
         </div>
-        <!-- 환각방지 -->
-        <div class="glass rounded-3xl p-6 md:p-8 shadow-xl h-full flex flex-col border-rose-500/20">
-          <div class="mb-4">
-            <div class="flex items-center gap-2">
-              <div class="w-1 h-4 bg-rose-500 rounded-full"></div>
-              <h3 class="text-xl font-black text-white">환각 방지</h3>
-            </div>
-            <div class="text-xs text-rose-400 font-bold mb-2 uppercase tracking-wider">검증 프로세스 기반 신뢰성 확보</div>
-          </div>
-          <div class="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2">
-            <div class="bg-rose-500/5 border border-rose-500/20 rounded-xl p-3">
-              <div class="text-[10px] font-bold text-rose-400 uppercase tracking-wider mb-1">LLM 단독 응답 의존 배제</div>
-              <div class="text-slate-400 text-[11px] leading-relaxed">단순 생성형 AI 모델의 자의적 판단으로 인한 환각(Hallucination) 현상을 차단합니다.</div>
-            </div>
-            <div class="bg-rose-500/5 border border-rose-500/20 rounded-xl p-3">
-              <div class="text-[10px] font-bold text-rose-400 uppercase tracking-wider mb-1">공개 DB 및 언론사 아카이브 대조</div>
-              <div class="text-slate-400 text-[11px] leading-relaxed">한국언론진흥재단 등록 공식 언론사 데이터베이스 대조</div>
-            </div>
-            <div class="bg-rose-500/5 border border-rose-500/20 rounded-xl p-3">
-              <div class="text-[10px] font-bold text-rose-400 uppercase tracking-wider mb-1">공공 데이터 실시간 크롤링</div>
-              <div class="text-slate-400 text-[11px] leading-relaxed">위키피디아 Open API 및 기상청·경찰청 등 정부 재난/행정 기관 공개 데이터</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Slide 5: Demo / Result -->
-    <section id="slide5" class="slide w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="w-full max-w-4xl h-full flex flex-col">
-        <div class="mb-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-4 bg-blue-500 rounded-full"></div>
-            <h2 class="text-2xl font-black text-white">결과물 시연</h2>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 h-full">
-          <div class="glass rounded-3xl p-6 col-span-1 md:col-span-3">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-2">
-                <div class="w-1 h-4 bg-blue-500 rounded-full"></div>
-                <div class="text-sm font-bold text-white">1. 직관적인 입력 UI 구성</div>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300 leading-relaxed">
-              <div><span class="font-bold text-white">다채널 데이터 입력:</span> 기사, 커뮤니티 소문, 유튜브/쇼츠 URL 다이렉트 지원</div>
-              <div><span class="font-bold text-white">듀얼 판독 탭:</span> '일반 기사/글' 및 '영상/숏폼' 전용 탭 구분으로 편의성 극대화</div>
+      <!-- 5. 결과물 시연 -->
+      <section class="slide">
+        <div class="head"><div class="bar" style="background:#2563eb"></div><h2>결과물 시연</h2><div class="no">05</div></div>
+        <div class="body cols-3">
+          <div class="card">
+            <div class="num" style="background:#2563eb">1</div>
+            <h3>직관적인 입력 UI 구성</h3>
+            <div class="rows" style="margin-top:14px">
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">다채널 데이터 입력</b><br>기사, 커뮤니티 소문, 유튜브/쇼츠 URL 다이렉트 지원</span></div>
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">듀얼 판독 탭</b><br>'일반 기사/글' 및 '영상/숏폼' 전용 탭 구분으로 편의성 극대화</span></div>
             </div>
           </div>
-          <div class="glass rounded-3xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-2">
-                <div class="w-1 h-4 bg-blue-500 rounded-full"></div>
-                <div class="text-sm font-bold text-white">2. AI 심층 팩트체크 프로세스</div>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex gap-2">
-                <div class="text-blue-400 font-bold text-[10px]">원클릭</div>
-                <div class="text-slate-300 text-[11px]">단 한 번의 클릭으로 실시간 출처 신뢰도 자동 분석</div>
-              </div>
-              <div class="flex gap-2">
-                <div class="text-blue-400 font-bold text-[10px]">다각도 교차 검증</div>
-                <div class="text-slate-300 text-[11px]">의학, 금융, 정치 등 전문 영역 교차 검증 알고리즘 적용</div>
-              </div>
+          <div class="card">
+            <div class="num" style="background:#2563eb">2</div>
+            <h3>AI 심층 팩트체크 프로세스</h3>
+            <div class="rows" style="margin-top:14px">
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">원클릭</b><br>단 한 번의 클릭으로 실시간 출처 신뢰도 자동 분석</span></div>
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">다각도 교차 검증</b><br>의학, 금융, 정치 등 전문 영역 교차 검증 알고리즘 적용</span></div>
             </div>
           </div>
-          <div class="glass rounded-3xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-2">
-                <div class="w-1 h-4 bg-blue-500 rounded-full"></div>
-                <div class="text-sm font-bold text-white">3. 판독 결과 및 실무 활용성</div>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex gap-2">
-                <div class="text-blue-400 font-bold text-[10px]">신뢰도 리포트</div>
-                <div class="text-slate-300 text-[11px]">수초 내 검증 점수 및 객관적 출처 근거 제시</div>
-              </div>
-              <div class="flex gap-2">
-                <div class="text-blue-400 font-bold text-[10px]">높은 완결성</div>
-                <div class="text-slate-300 text-[11px]">텍스트 및 미디어 형식에 구애받지 않는 안정적 판독</div>
-              </div>
+          <div class="card">
+            <div class="num" style="background:#2563eb">3</div>
+            <h3>판독 결과 및 실무 활용성</h3>
+            <div class="rows" style="margin-top:14px">
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">신뢰도 리포트</b><br>수초 내 검증 점수 및 객관적 출처 근거 제시</span></div>
+              <div class="row" style="grid-template-columns:1fr"><span><b style="color:var(--ink)">높은 완결성</b><br>텍스트 및 미디어 형식에 구애받지 않는 안정적 판독</span></div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Slide 6: Expected Effects -->
-    <section id="slide6" class="slide w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fadeIn">
-      <div class="w-full max-w-5xl h-full flex flex-col">
-        <div class="mb-8">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-4 bg-amber-500 rounded-full"></div>
-            <h2 class="text-2xl font-black text-white">기대 효과</h2>
+      <!-- 6. 기대 효과 -->
+      <section class="slide">
+        <div class="head"><div class="bar" style="background:var(--amber)"></div><h2>기대 효과</h2><div class="no">06</div></div>
+        <div class="body cols-2">
+          <div class="card">
+            <h3 style="margin-bottom:24px">사회 효과</h3>
+            <ul class="check">
+              <li>피해 예방, 커뮤니티 신뢰</li>
+              <li>검증 능력 강화, 내성 향상, 품질 개선</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:24px">서비스 확장</h3>
+            <ul class="check" style="--c:var(--amber)">
+              <li>B2B 확장: 팩트체크 자동화, API 연동 플래그</li>
+              <li>크롬 확장 프로그램 연동, 모바일 전용 앱 출시</li>
+            </ul>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-          <div class="glass rounded-3xl p-8 md:p-10 shadow-xl flex flex-col justify-center">
-            <h3 class="text-xl font-black text-white mb-6">사회 효과</h3>
-            <div class="space-y-3">
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-500 font-bold text-xs">✓</span>
-                <div class="text-slate-300 text-sm leading-relaxed">피해 예방, 커뮤니티 신뢰</div>
-              </div>
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-500 font-bold text-xs">✓</span>
-                <div class="text-slate-300 text-sm leading-relaxed">검증 능력 강화, 내성 향상, 품질 개선</div>
-              </div>
-            </div>
-          </div>
-          <div class="glass rounded-3xl p-8 md:p-10 shadow-xl flex flex-col justify-center">
-            <h3 class="text-xl font-black text-white mb-6">서비스 확장</h3>
-            <div class="space-y-3">
-              <div class="flex items-start gap-2">
-                <span class="text-amber-500 font-bold text-xs">✓</span>
-                <div class="text-slate-300 text-sm leading-relaxed">B2B 확장: 팩트체크 자동화, API 연동 플래그</div>
-              </div>
-              <div class="flex items-start gap-2">
-                <span class="text-amber-500 font-bold text-xs">✓</span>
-                <div class="text-slate-300 text-sm leading-relaxed">크롬 확장 프로그램 연동, 모바일 전용 앱 출시</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-auto pt-8 border-t border-obsidian-800 text-center">
-          <div class="text-xs font-bold text-indigo-400 tracking-wider uppercase">TruthLens AI</div>
-          <div class="text-[10px] text-slate-500 mt-1">truthlen-ai.vercel.app</div>
-        </div>
-      </div>
-    </section>
+        <div class="foot"><b>TruthLens AI</b>truthlen-ai.vercel.app</div>
+      </section>
 
-  </main>
-
-  <!-- Progress & Dots -->
-  <div class="bg-obsidian-900/80 backdrop-blur border-b border-obsidian-800 px-6 py-3 flex items-center justify-between z-40">
-    <div class="flex items-center gap-1 text-xs font-bold text-slate-500">
-      <span id="currentNum">01</span> / <span class="text-slate-600">06</span>
-    </div>
-    <div class="flex items-center gap-1.5" id="dots">
-      <!-- dots injected by JS -->
     </div>
   </div>
 
+  <div id="bar">
+    <button id="prev">이전</button>
+    <div id="dots"></div>
+    <span id="count" style="text-align:right"></span>
+    <button id="next">다음</button>
+  </div>
+
   <script>
-    const totalSlides = 6;
-    let current = 1;
+    const slides = [...document.querySelectorAll('.slide')];
+    const stage = document.getElementById('stage');
+    const viewport = document.getElementById('viewport');
+    const dots = document.getElementById('dots');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    let cur = 0;
 
-    const dotsContainer = document.getElementById('dots');
-    const currentNum = document.getElementById('currentNum');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    // Create dots
-    for (let i = 1; i <= totalSlides; i++) {
-      const dot = document.createElement('button');
-      dot.className = `nav-dot w-2 h-2 rounded-full ${i === 1 ? 'active bg-indigo-500' : 'bg-slate-600/50 hover:bg-slate-400/50'}`;
-      dot.onclick = () => goToSlide(i);
-      dotsContainer.appendChild(dot);
-    }
-
-    function updateSlide() {
-      // Hide all
-      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-      // Show current
-      document.getElementById(`slide${current}`).classList.add('active');
-
-      // Update dots
-      dotsContainer.querySelectorAll('.nav-dot').forEach((dot, i) => {
-        dot.className = `nav-dot w-2 h-2 rounded-full transition-all ${i + 1 === current ? 'active bg-indigo-500 transform scale-125' : 'bg-slate-600/50 hover:bg-slate-400/50'}`;
-      });
-
-      // Update counter
-      currentNum.textContent = String(current).padStart(2, '0');
-
-      // Button states
-      prevBtn.disabled = current === 1;
-      nextBtn.disabled = current === totalSlides;
-      prevBtn.style.opacity = current === 1 ? '0.4' : '1';
-      nextBtn.style.opacity = current === totalSlides ? '0.4' : '1';
-    }
-
-    function goToSlide(n) {
-      if (n < 1 || n > totalSlides) return;
-      current = n;
-      updateSlide();
-    }
-
-    prevBtn.onclick = () => goToSlide(current - 1);
-    nextBtn.onclick = () => goToSlide(current + 1);
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(current + 1); }
-      if (e.key === 'ArrowLeft') goToSlide(current - 1);
-      if (e.key === 'Home') goToSlide(1);
-      if (e.key === 'End') goToSlide(totalSlides);
+    slides.forEach((_, i) => {
+      const d = document.createElement('i');
+      d.onclick = () => go(i);
+      dots.appendChild(d);
     });
 
-    // Touch swipe
-    let touchStartX = 0;
-    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-    document.addEventListener('touchend', e => {
-      const touchEndX = e.changedTouches[0].screenX;
-      if (touchStartX - touchEndX > 50) goToSlide(current + 1);
-      if (touchStartX - touchEndX < -50) goToSlide(current - 1);
-    }, {passive: true});
+    function go(n) {
+      if (n < 0 || n >= slides.length) return;
+      cur = n;
+      slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+      [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
+      document.getElementById('count').textContent = `${cur + 1} / ${slides.length}`;
+      prev.disabled = cur === 0;
+      next.disabled = cur === slides.length - 1;
+    }
 
-    updateSlide();
+    function fit() {
+      const s = Math.min(viewport.clientWidth / 1280, viewport.clientHeight / 720);
+      stage.style.transform = `translate(-50%, -50%) scale(${s})`;
+    }
+
+    prev.onclick = () => go(cur - 1);
+    next.onclick = () => go(cur + 1);
+    addEventListener('resize', fit);
+    addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(slides.length - 1);
+    });
+    let x0 = 0;
+    addEventListener('touchstart', e => { x0 = e.changedTouches[0].screenX; }, { passive: true });
+    addEventListener('touchend', e => {
+      const dx = x0 - e.changedTouches[0].screenX;
+      if (dx > 50) go(cur + 1);
+      if (dx < -50) go(cur - 1);
+    }, { passive: true });
+
+    fit();
+    go(0);
   </script>
 </body>
 </html>
