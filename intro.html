@@ -55,6 +55,9 @@
     .roomy .lead { font-size: 23px; }
     .lead { font-size: 21px; line-height: 1.65; color: var(--ink); }
     .lead b { color: var(--accent); }
+    .tag.st1 { background: #d1fae5; color: #059669; }
+    .tag.st2 { background: #fef3c7; color: #d97706; }
+    .tag.st3 { background: #ede9fe; color: #7c3aed; }
     .tag { display: inline-block; font-size: 15px; font-weight: 700; padding: 3px 12px; border-radius: 999px; background: var(--soft); color: var(--accent); }
     .num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 900; color: #fff; background: var(--c, var(--accent)); flex-shrink: 0; }
     .viz { display: flex; align-items: center; justify-content: center; min-height: 0; }
@@ -217,13 +220,13 @@
         <div class="avatar" style="--c:var(--emerald)">김</div>
         <h3 style="margin-top:18px">김무성</h3>
         <span class="tag" style="margin:4px 0 16px;background:#d1fae5;color:var(--emerald)">웹 자체 개발</span>
-        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 화면부터 AI 연동까지 서비스가 실제로 돌아가게 만드는 작업입니다.</p>
+        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 개선된 입력 화면과 결과 리포트, 배포까지 함께 만들었습니다.</p>
       </div>
       <div class="card rise" style="--d:.3s;align-items:center;justify-content:center;text-align:center">
         <div class="avatar" style="--c:var(--violet)">황</div>
         <h3 style="margin-top:18px">황채윤</h3>
         <span class="tag" style="margin:4px 0 16px;background:#ede9fe;color:var(--violet)">웹 자체 개발</span>
-        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 개선된 입력 화면과 결과 리포트, 배포까지 함께 만들었습니다.</p>
+        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 화면부터 AI 연동까지 서비스가 실제로 돌아가게 만드는 작업입니다.</p>
       </div>
     </div>
   </section>
@@ -239,8 +242,8 @@
           <ul>
             <li><b>문제와 해결 계획</b> — 왜 가짜뉴스 판독 서비스가 필요한가, 어떻게 풀려고 했는가</li>
             <li><b>8월까지의 결과물</b> — 입력·처리·출력 구조, 환각 방지 설계, 초기 UI와 한계</li>
-            <li><b>고도화와 Before / After</b> — 멘토링 이후 무엇이 어떻게 바뀌었는가</li>
-            <li><b>라이브 시연과 배포</b> — QR로 접속해 직접 입력해 보고, 결과 이미지를 공유</li>
+            <li><b>고도화와 개선 ①~④</b> — Before/After, 사용 흐름, 결과 리포트, 이미지 공유·배포</li>
+            <li><b>라이브 시연과 앞으로</b> — QR로 접속해 직접 입력해 보고, 2·3차 고도화 계획 소개</li>
           </ul>
         </div>
       </div>
@@ -331,11 +334,34 @@
     </div>
   </section>
 
-  <!-- 5. 해결 계획 3가지 -->
-  <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>해결 계획</h2><span class="sub">크게 세 가지를 계획했습니다</span><div class="no"></div></div>
+  <!-- 6. 해결 계획 3가지 -->
+  <section class="slide">
+    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>해결 계획</h2><span class="sub">세 가지 계획을 고도화 단계별로 나눴습니다</span><div class="no"></div></div>
     <div class="body cols-3" style="grid-template-rows: 1fr;">
       <div class="card rise">
+        <span class="tag st1" style="align-self:flex-start;margin-bottom:8px">1차 고도화 계획</span>
+        <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
+          <circle cx="40" cy="30" r="17" fill="none" stroke="#059669" stroke-width="5"/><line x1="52" y1="42" x2="64" y2="54" stroke="#059669" stroke-width="6" stroke-linecap="round"/>
+          <path class="dashing" d="M66 30h38" stroke="#059669" stroke-width="3" fill="none"/>
+          <circle class="pulse" cx="108" cy="30" r="8" fill="#d1fae5" stroke="#059669" stroke-width="3"/>
+        </svg>
+        <div class="num" style="--c:var(--emerald);margin-bottom:12px">01</div>
+        <h3>원문 추적과 출처 평가</h3>
+        <p>주장이 처음 나온 <b>원문을 추적</b>하고, 출처 매체의 신뢰도를 평가합니다. 전문가 의견과 공식 자료를 직접 대조해서 신뢰성 점수를 산출하려고 했습니다.</p>
+      </div>
+      <div class="card rise" style="--d:.15s">
+        <span class="tag st1" style="align-self:flex-start;margin-bottom:8px">1차 고도화 계획</span>
+        <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
+          <rect x="14" y="14" width="92" height="34" rx="17" fill="#7c3aed"/>
+          <text x="60" y="36" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">검증하기</text>
+          <circle cx="104" cy="40" r="6" fill="none" stroke="#c4b5fd" stroke-width="2.5" class="pulse"/>
+        </svg>
+        <div class="num" style="--c:var(--violet);margin-bottom:12px">02</div>
+        <h3>단일 버튼, 원클릭 분석</h3>
+        <p>의심 정보를 <b>붙여넣기만 하면</b> 버튼 하나로 완전한 분석 결과를 즉시 제공합니다. 누구나 설명서 없이 쓸 수 있는 직관적인 설계를 목표로 했습니다.</p>
+      </div>
+      <div class="card rise" style="--d:.3s">
+        <span class="tag st2" style="align-self:flex-start;margin-bottom:8px">2차 고도화 계획</span>
         <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
           <rect class="pulse" x="6" y="12" width="32" height="36" rx="6" fill="#eef2ff" stroke="#4f46e5" stroke-width="2.5"/>
           <rect class="pulse" x="44" y="12" width="32" height="36" rx="6" fill="#eef2ff" stroke="#4f46e5" stroke-width="2.5" style="animation-delay:.3s"/>
@@ -343,29 +369,9 @@
           <text x="22" y="36" text-anchor="middle" font-size="11" font-weight="900" fill="#4f46e5">뉴스</text>
           <path d="M56 24l14 6-14 6z" fill="#4f46e5"/><text x="98" y="36" text-anchor="middle" font-size="10" font-weight="900" fill="#4f46e5">쇼츠</text>
         </svg>
-        <div class="num" style="margin-bottom:12px">01</div>
+        <div class="num" style="margin-bottom:12px">03</div>
         <h3>다양한 콘텐츠 통합 분석</h3>
         <p>뉴스뿐 아니라 <b>유튜브 영상, 유튜브 쇼츠</b>까지 한곳에서 분석합니다. 영상의 자막과 음성을 자동으로 추출해 텍스트로 바꾸고, 그 텍스트를 기반으로 검증을 수행합니다.</p>
-      </div>
-      <div class="card rise" style="--d:.15s">
-        <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
-          <circle cx="40" cy="30" r="17" fill="none" stroke="#059669" stroke-width="5"/><line x1="52" y1="42" x2="64" y2="54" stroke="#059669" stroke-width="6" stroke-linecap="round"/>
-          <path class="dashing" d="M66 30h38" stroke="#059669" stroke-width="3" fill="none"/>
-          <circle class="pulse" cx="108" cy="30" r="8" fill="#d1fae5" stroke="#059669" stroke-width="3"/>
-        </svg>
-        <div class="num" style="--c:var(--emerald);margin-bottom:12px">02</div>
-        <h3>원문 추적과 출처 평가</h3>
-        <p>주장이 처음 나온 <b>원문을 추적</b>하고, 출처 매체의 신뢰도를 평가합니다. 전문가 의견과 공식 자료를 직접 대조해서 신뢰성 점수를 산출하려고 했습니다.</p>
-      </div>
-      <div class="card rise" style="--d:.3s">
-        <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
-          <rect x="14" y="14" width="92" height="34" rx="17" fill="#7c3aed"/>
-          <text x="60" y="36" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">검증하기</text>
-          <circle cx="104" cy="40" r="6" fill="none" stroke="#c4b5fd" stroke-width="2.5" class="pulse"/>
-        </svg>
-        <div class="num" style="--c:var(--violet);margin-bottom:12px">03</div>
-        <h3>단일 버튼, 원클릭 분석</h3>
-        <p>의심 정보를 <b>붙여넣기만 하면</b> 버튼 하나로 완전한 분석 결과를 즉시 제공합니다. 누구나 설명서 없이 쓸 수 있는 직관적인 설계를 목표로 했습니다.</p>
       </div>
     </div>
   </section>
@@ -376,7 +382,7 @@
     <svg viewBox="0 0 1136 100" width="1136" height="100" style="flex-shrink:0;margin-bottom:18px">
       <g font-size="26" font-weight="900" text-anchor="middle">
         <rect x="0" y="14" width="330" height="72" rx="36" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><text x="165" y="60" fill="#4f46e5">입력</text>
-        <rect x="403" y="14" width="330" height="72" rx="36" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><text x="568" y="60" fill="#4f46e5">처리</text>
+        <rect x="403" y="14" width="330" height="72" rx="36" fill="#fff" stroke="#d97706" stroke-width="3" stroke-dasharray="10 7"/><text x="568" y="60" fill="#4f46e5">처리 <tspan font-size="18" fill="#d97706">설계도까지</tspan></text>
         <rect x="806" y="14" width="330" height="72" rx="36" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><text x="971" y="60" fill="#4f46e5">출력</text>
       </g>
       <path d="M338 50H395M741 50H798" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" fill="none"/>
@@ -386,7 +392,7 @@
     </svg>
     <div class="body cols-3" style="grid-template-rows:1fr">
       <div class="card rise"><h4><span class="tag">INPUT</span></h4><ul style="margin-top:6px"><li><b>URL</b> — 기사 링크, 유튜브 링크</li><li><b>텍스트</b> — 헤드라인, 루머, 소문 글</li><li><b>이미지</b> — 캡처 이미지 제출</li></ul><p style="margin-top:12px">간단하게 텍스트나 이미지를 제출하면 바로 처리가 시작되도록 틀을 만들었습니다.</p></div>
-      <div class="card rise" style="--d:.15s"><h4><span class="tag">PROCESS</span></h4><ul style="margin-top:6px"><li><b>OpenWeb</b> 메타데이터 수집 및 핵심 개체 추출</li><li><b>유튜브 oEmbed</b> 메타데이터 및 썸네일 분석</li><li><b>신뢰도 평가</b> 산출 (출처 및 키워드 기반)</li></ul></div>
+      <div class="card rise" style="--d:.15s"><h4><span class="tag">PROCESS</span><span class="tag st2">설계도(틀)만 완성</span></h4><ul style="margin-top:6px"><li><b>OpenWeb</b> 메타데이터 수집 및 핵심 개체 추출</li><li><b>유튜브 oEmbed</b> 메타데이터 및 썸네일 분석</li><li><b>신뢰도 평가</b> 산출 (출처 및 키워드 기반)</li></ul><p style="margin-top:12px">처리 단계는 <b>틀, 즉 설계도까지만</b> 되어 있었습니다. 실제 구현은 다음 고도화 과정에서 하기로 했습니다.</p></div>
       <div class="card hl rise" style="--d:.3s"><h4><span class="tag">OUTPUT</span></h4><ul style="margin-top:6px"><li><b>3줄 핵심 요약</b></li><li><b>진실성 점수</b></li><li><b>자극성 지수</b></li></ul><p style="margin-top:12px">세 가지를 포함한 <b>종합 분석 리포트</b> 제공까지가 8월에 만든 틀입니다.</p></div>
     </div>
   </section>
@@ -465,7 +471,7 @@
         </ul>
       </div>
       <div class="card rise" style="--d:.15s">
-        <h3 style="color:var(--amber)">서비스 확장</h3>
+        <h3 style="color:var(--amber)">서비스 확장 <span class="tag st3" style="vertical-align:middle;margin-left:6px">3차 고도화 계획</span></h3>
         <ul style="--c:var(--amber)">
           <li><b>B2B 확장</b> — 팩트체크를 더 자동화해 기업 간 거래에서도 쓸 수 있도록 <b>API 연동 플래그</b>를 고려하고 있습니다.</li>
           <li><b>Chrome 확장 프로그램</b> — 보던 페이지에서 바로 검증합니다.</li>
@@ -532,7 +538,7 @@
 
   <!-- 12. Before / After 입력 화면 -->
   <section class="slide">
-    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>Before → After</h2><span class="sub">8월 첫 화면에서 지금까지 바뀐 것</span><div class="no"></div></div>
+    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>개선 ① Before → After</h2><span class="sub">8월 첫 화면에서 지금까지 바뀐 것</span><div class="no"></div></div>
     <div class="ba" style="flex:1;min-height:0;grid-template-columns:300px 1fr 240px;gap:22px">
       <div class="col rise">
         <span class="lab" style="background:#ffe4e6;color:var(--rose)">BEFORE · 8월</span>
@@ -609,26 +615,9 @@
     </div>
   </section>
 
-  <!-- 15. 라이브 시연 -->
-  <section class="slide mid">
-    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>라이브 시연</h2><span class="sub">QR로 접속해서 직접 해 봅니다</span><div class="no"></div></div>
-    <div class="body" style="grid-template-columns: 500px 1fr; gap: 44px;">
-      <div class="viz" style="flex-direction:column;gap:12px">
-        <div class="qrbox rise"><img src="img/qr.svg" alt="TruthLens AI 접속 QR"><i class="scan"></i><b class="c1"></b><b class="c2"></b><b class="c3"></b><b class="c4"></b></div>
-        <div class="url rise" style="--d:.2s">truthlen-ai.vercel.app</div>
-      </div>
-      <div class="stack">
-        <div class="card rise"><h4><span class="num" style="--c:var(--rose)">1</span>QR 스캔해서 접속</h4><p>휴대폰 카메라로 QR을 비추면 바로 열립니다. <b>24시간</b> 언제든 접속할 수 있습니다.</p></div>
-        <div class="card rise" style="--d:.1s"><h4><span class="num" style="--c:var(--amber)">2</span>질문 선택 또는 입력</h4><p>예시 질문(<b>선풍기 · 양파 · 물은 답을 알고 있다</b>)을 누르면 자동 입력됩니다. 직접 써도 됩니다.</p></div>
-        <div class="card rise" style="--d:.2s"><h4><span class="num" style="--c:var(--emerald)">3</span>'지금 검증하기' 누르고 대기</h4><p>단계별 진행 문구가 바뀌며 분석합니다. 보통 <b>30초 안에</b> 결과가 나옵니다.</p></div>
-        <div class="card hl rise" style="--d:.3s"><h4><span class="num">4</span>결과 확인 · 이미지 저장</h4><p>점수 → 요약 → 3줄 요약을 확인하고, 리포트를 <b>이미지로 저장해 공유</b>할 수 있습니다.</p></div>
-      </div>
-    </div>
-  </section>
-
   <!-- 16. 공유 + 배포 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>이미지 공유와 배포</h2><span class="sub">알게 된 진실을 다른 사람에게</span><div class="no"></div></div>
+    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>개선 ④ 공유와 배포</h2><span class="sub">알게 된 진실을 다른 사람에게</span><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 250px 330px; gap: 30px;">
       <div class="stack">
         <svg viewBox="0 0 420 110" width="420" height="110" style="flex-shrink:0">
@@ -659,27 +648,48 @@
       </div>
     </div>
   </section>
+  <!-- 15. 라이브 시연 -->
+  <section class="slide mid">
+    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>라이브 시연</h2><span class="sub">QR로 접속해서 직접 해 봅니다</span><div class="no"></div></div>
+    <div class="body" style="grid-template-columns: 500px 1fr; gap: 44px;">
+      <div class="viz" style="flex-direction:column;gap:12px">
+        <div class="qrbox rise"><img src="img/qr.svg" alt="TruthLens AI 접속 QR"><i class="scan"></i><b class="c1"></b><b class="c2"></b><b class="c3"></b><b class="c4"></b></div>
+        <div class="url rise" style="--d:.2s">truthlen-ai.vercel.app</div>
+      </div>
+      <div class="stack">
+        <div class="card rise"><h4><span class="num" style="--c:var(--rose)">1</span>QR 스캔해서 접속</h4><p>휴대폰 카메라로 QR을 비추면 바로 열립니다. <b>24시간</b> 언제든 접속할 수 있습니다.</p></div>
+        <div class="card rise" style="--d:.1s"><h4><span class="num" style="--c:var(--amber)">2</span>질문 선택 또는 입력</h4><p>예시 질문(<b>선풍기 · 양파 · 물은 답을 알고 있다</b>)을 누르면 자동 입력됩니다. 직접 써도 됩니다.</p></div>
+        <div class="card rise" style="--d:.2s"><h4><span class="num" style="--c:var(--emerald)">3</span>'지금 검증하기' 누르고 대기</h4><p>단계별 진행 문구가 바뀌며 분석합니다. 보통 <b>30초 안에</b> 결과가 나옵니다.</p></div>
+        <div class="card hl rise" style="--d:.3s"><h4><span class="num">4</span>결과 확인 · 이미지 저장</h4><p>점수 → 요약 → 3줄 요약을 확인하고, 리포트를 <b>이미지로 저장해 공유</b>할 수 있습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- 17. 마무리 -->
-  <section class="slide roomy">
+  <section class="slide mid">
     <div class="head"><div class="bar" style="--c:var(--accent)"></div><h2>배운 점과 앞으로</h2><div class="no"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 340px; gap: 34px;">
-      <div class="stack">
+    <div class="body" style="grid-template-columns: 1fr 300px; gap: 30px;">
+      <div class="stack" style="gap:12px">
         <div class="card rise">
           <h4>우리가 배운 것</h4>
-          <p>기획 → UI → AI 연동 → 배포까지 <b>서비스를 처음부터 끝까지 만드는 과정</b>을 직접 경험했습니다. 앞으로 비슷한 서비스를 만들 때 이 경험을 그대로 활용할 수 있습니다.</p>
+          <p>기획 → UI → AI 연동 → 배포까지 <b>서비스를 처음부터 끝까지 만드는 과정</b>을 직접 경험했습니다. 이 경험은 다음 서비스에도 그대로 쓸 수 있고, 가짜뉴스의 <b>사회적 비용</b>을 줄이는 것이 최종 목표입니다.</p>
         </div>
         <div class="card rise" style="--d:.15s">
-          <h4>앞으로의 방향</h4>
-          <p>지금은 가짜뉴스 팩트체크에서 출발했지만, 앞으로 <b>더 많은 것을 팩트체크</b>할 수 있도록 확장하며 계속 고도화할 계획입니다. 가짜뉴스로 인해 생기는 <b>사회적 비용</b>을 일정 부분 줄이는 것이 목표입니다.</p>
+          <h4><span class="tag st2">2차 고도화 계획</span>콘텐츠 통합 분석</h4>
+          <p>뉴스뿐 아니라 <b>유튜브 영상과 쇼츠</b>까지 분석합니다. 영상의 <b>자막과 음성을 자동 추출</b>해 텍스트로 바꾸고, 그 텍스트를 기반으로 검증합니다.</p>
         </div>
-        <div class="card hl flex1 rise" style="--d:.3s;justify-content:center">
-          <h3>Q &amp; A</h3>
-          <p>서비스를 써 보시고 궁금한 점이나 개선했으면 하는 점이 있다면 말씀해 주세요. 참고하겠습니다. 감사합니다.</p>
+        <div class="card rise" style="--d:.3s">
+          <h4><span class="tag st3">3차 고도화 계획</span>서비스 확장</h4>
+          <p><b>B2B 확장</b>(팩트체크 자동화, API 연동 플래그), <b>Chrome 확장 프로그램</b> 연동, <b>모바일 전용 앱</b> 출시로 전 세계 누구나 쉽게 쓸 수 있게 만듭니다.</p>
+        </div>
+        <div class="card hl flex1 rise" style="--d:.45s;justify-content:center">
+          <h4>Q &amp; A</h4>
+          <p>궁금한 점이나 개선했으면 하는 점을 말씀해 주세요. 감사합니다.</p>
         </div>
       </div>
       <div class="viz">
-        <svg viewBox="0 0 340 340" width="340" height="340">
+        <svg viewBox="0 0 340 340" width="300" height="300">
           <circle class="spin" cx="170" cy="170" r="120" fill="none" stroke="#c7d2fe" stroke-width="4" stroke-dasharray="14 12"/>
           <g font-size="18" font-weight="900" text-anchor="middle">
             <circle cx="170" cy="50" r="38" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><text x="170" y="56" fill="#4f46e5">기획</text>
@@ -726,18 +736,18 @@
     ['의심 정보 입력 → <em>진위 + 신뢰도 점수</em>', '8월 <em>틀</em> → 9~10월 <em>고도화</em>(멘토링)', '결과까지 <em>약 30초</em>', '<em>24시간 배포</em> · QR 접속', '순서: 문제 → 8월 → 개선 → 시연'],
     ['<em>가짜뉴스</em>가 너무 판침', '너무 <em>그럴듯해서</em> 쉽게 속음', '의학 · 금융 · 정치 허위정보', '<em>AI로 먼저 검증</em> · 최신 내용까지', '→ 그런 알고리즘을 만들어 보자'],
     ['기존 검증: <em>개별 확인</em> · 시간 소모', '<em>일반 사용자</em>에게 어려움 · 메모만 하다 포기', '해결 방향: <em>텍스트 하나 · 질문 하나</em>', '→ 즉시 <em>진위 판단 + 점수</em>'],
-    ['계획 <em>세 가지</em>', '① 뉴스 + <em>유튜브 · 쇼츠</em> 통합, 자막·음성 자동 추출 → 텍스트 검증', '② <em>원문 추적</em> · 출처 신뢰도 · 전문가 의견 · 공식 자료 대조', '③ 붙여넣기 → <em>원클릭</em> 즉시 결과'],
-    ['8월: <em>입력 → 처리 → 출력</em>', '입력: URL · 텍스트 · 이미지', '처리: 메타데이터 · 핵심 개체 · oEmbed · 썸네일 · 출처/키워드 신뢰도', '출력: <em>3줄 요약 · 진실성 점수 · 자극성 지수</em> → 종합 리포트'],
+    ['계획 <em>세 가지</em> — 다 되진 못했다 · 고도화 단계로 나눔', '① <em>원문 추적</em> · 출처 신뢰도 · 전문가·공식 자료 대조 → <em>1차 고도화</em>', '② 붙여넣기 → <em>원클릭</em> 즉시 결과 → <em>1차 고도화</em>', '③ 뉴스 + <em>유튜브 · 쇼츠</em> 통합, 자막·음성 추출 → <em>2차 고도화</em>'],
+    ['8월: <em>입력 → 처리 → 출력</em>', '입력: URL · 텍스트 · 이미지', '처리: 메타데이터 · 핵심 개체 · oEmbed · 썸네일 · 출처/키워드 신뢰도 → <em>설계도(틀)까지만</em>, 구현은 고도화에서', '출력: <em>3줄 요약 · 진실성 점수 · 자극성 지수</em> → 종합 리포트'],
     ['<em>환각 방지</em> 설계(구상)', 'LLM 단독 응답 <em>배제</em>', '언론사 DB · 아카이브 <em>대조</em>', '공공 데이터(위키 · 기상청 · 경찰청)', '<em>한계</em>: 내부 알고리즘 미완성 → 틀까지'],
     ['8월 결과물 = <em>겉 UI</em> · NLP 엔진 화면', '입력 UI: 뉴스/텍스트 · <em>유튜브 판독</em> 탭', '진행 사항 · 결과 틀', '문제: API키 선택 · 용어 → <em>뭘 해야 할지 모름</em>'],
-    ['사회: <em>검증 능력 · 내성 향상</em>', '품질 개선 · <em>커뮤니티 신뢰</em> · 피해 예방', '확장: <em>B2B</em> · API 연동 플래그', '<em>Chrome 확장</em> · 모바일 앱', '→ 전 세계 누구나'],
+    ['사회: <em>검증 능력 · 내성 향상</em>', '품질 개선 · <em>커뮤니티 신뢰</em> · 피해 예방', '서비스 확장 = <em>3차 고도화 계획</em>', '<em>B2B</em> · API 연동 플래그 · <em>Chrome 확장</em> · 모바일 앱', '→ 전 세계 누구나'],
     ['8월 틀 → 9월 <em>멘토링</em> → 10월 배포', '<em>실제로 되는 제품</em>', 'Gemini API · 서버 연동', '입력 UI 단순화 · 예시 질문 · 이미지 공유'],
-    ['<em>Before → After</em> · 어디를 해야 할지 몰랐다', '기술 용어 · <em>API키 선택</em> 제거', '탭 2개 → <em>입력창 하나</em>', '예시 3개: 선풍기 · 양파 · 물은 답을 알고 있다', '긴 버튼 → <em>지금 검증하기</em> · 소개 버튼', '결과: 점수 · 요약 · 3줄 요약 · 이미지 공유'],
-    ['<em>1 입력 → 2 검증 → 3 결과</em>', '진행 문구 단계별 변경', '보통 <em>30초</em>', '예시 질문 → 자동 입력'],
-    ['점수 → 상태 · 태그 → 진단 → <em>3줄 요약</em>', '선풍기 괴담: 실제 <em>사례 없음</em>', '<em>과학적 타당성 없는</em> 거짓 정보', '→ 이제 <em>직접 해 보겠습니다</em>'],
-    ['<em>QR 크게</em> — 접속 안내', '① QR 스캔 ② 예시 질문 선택 ③ 지금 검증하기', '30초 대기 → 결과', '점수 · 요약 · 3줄 요약 설명', '마지막: <em>이미지 저장 · 공유</em>'],
-    ['이미지 저장 → <em>카톡 공유</em>', '깔끔한 UI로 읽고 <em>서비스 홍보</em>', '<em>24시간 배포</em> · 집에서도 접속', '앞으로 계속 고도화'],
-    ['처음부터 끝까지 <em>서비스 제작 경험</em>', '다음 서비스에 <em>그대로 활용</em>', '앞으로 <em>더 많은 팩트체크</em>', '가짜뉴스 <em>사회적 비용</em> 절감', '<em>질문 · 개선사항</em> 환영 · 감사합니다']
+    ['<em>개선 ①</em> Before → After · 어디를 해야 할지 몰랐다', '기술 용어 · <em>API키 선택</em> 제거', '탭 2개 → <em>입력창 하나</em>', '예시 3개: 선풍기 · 양파 · 물은 답을 알고 있다', '긴 버튼 → <em>지금 검증하기</em> · 소개 버튼', '결과: 점수 · 요약 · 3줄 요약 · 이미지 공유'],
+    ['<em>개선 ②</em> 1 입력 → 2 검증 → 3 결과', '진행 문구 단계별 변경', '보통 <em>30초</em>', '예시 질문 → 자동 입력'],
+    ['<em>개선 ③</em> 점수 → 상태 · 태그 → 진단 → <em>3줄 요약</em>', '선풍기 괴담: 실제 <em>사례 없음</em>', '<em>과학적 타당성 없는</em> 거짓 정보', '→ 이제 <em>직접 해 보겠습니다</em>'],
+    ['<em>개선 ④</em> 이미지 저장 → <em>카톡 공유</em>', '깔끔한 UI로 읽고 <em>서비스 홍보</em>', '<em>24시간 배포</em> · 집에서도 접속', '→ 이제 <em>직접 시연</em>(QR)'],
+    ['<em>QR 크게</em> — 접속 안내', '① QR 스캔 ② 예시 질문 선택 ③ 지금 검증하기', '30초 대기 → 결과', '점수 · 요약 · 3줄 요약 설명', '마지막: 이미지 저장 · 공유 보여 주기 → 마무리'],
+    ['처음부터 끝까지 <em>서비스 제작 경험</em> · 다음 서비스에 활용', '<em>2차 고도화</em>: 유튜브·쇼츠 통합 분석(자막·음성 추출)', '<em>3차 고도화</em>: B2B API · Chrome 확장 · 모바일 앱', '가짜뉴스 <em>사회적 비용</em> 절감', '<em>질문 · 개선사항</em> 환영 · 감사합니다']
   ];
 
   slides.forEach((s, i) => {
