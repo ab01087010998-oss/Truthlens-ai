@@ -116,12 +116,45 @@
     .ba .col { display: flex; flex-direction: column; align-items: center; }
     .ba .lab { font-size: 16px; font-weight: 900; padding: 5px 16px; border-radius: 999px; margin-bottom: 12px; }
     .rows4 { display: flex; flex-direction: column; gap: 10px; }
-    .r4 { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
-    .r4 .b { font-size: 15px; line-height: 1.45; color: var(--sub); text-align: left; }
-    .r4 .a { font-size: 15px; line-height: 1.45; color: var(--ink); font-weight: 500; text-align: left; }
+    .r4 { display: grid; grid-template-columns: 1fr 26px 1fr; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 7px 12px; }
+    .r4 .b { font-size: 14px; line-height: 1.4; color: var(--sub); text-align: left; }
+    .r4 .a { font-size: 14px; line-height: 1.4; color: var(--ink); font-weight: 500; text-align: left; }
     .r4 .a em, .r4 .b em { font-style: normal; font-weight: 900; display: block; font-size: 14px; margin-bottom: 1px; }
     .r4 .b em { color: var(--rose); } .r4 .a em { color: var(--emerald); }
-    .r4 svg { width: 28px; height: 28px; }
+    .r4 svg { width: 24px; height: 24px; }
+
+
+    /* 팀원 아바타 */
+    .avatar { width: 104px; height: 104px; border-radius: 50%; background: var(--c); color: #fff; font-size: 46px; font-weight: 900; display: flex; align-items: center; justify-content: center; position: relative; }
+    .avatar::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; border: 3px solid var(--c); opacity: .35; animation: pulse 2.4s infinite; }
+
+    /* 라이브 시연 QR */
+    .qrbox { position: relative; width: 480px; height: 480px; padding: 22px; background: #fff; border: 2px solid var(--line); border-radius: 26px; box-shadow: 0 10px 30px rgba(15, 23, 42, .10); overflow: hidden; }
+    .qrbox img { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+    .qrbox .scan { position: absolute; left: 22px; right: 22px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, transparent, #4f46e5, transparent); box-shadow: 0 0 14px #4f46e5; animation: scanmove 3s ease-in-out infinite; }
+    .qrbox b { position: absolute; width: 36px; height: 36px; border: 5px solid var(--accent); }
+    .qrbox .c1 { left: 8px; top: 8px; border-right: 0; border-bottom: 0; border-radius: 14px 0 0 0; }
+    .qrbox .c2 { right: 8px; top: 8px; border-left: 0; border-bottom: 0; border-radius: 0 14px 0 0; }
+    .qrbox .c3 { left: 8px; bottom: 8px; border-right: 0; border-top: 0; border-radius: 0 0 0 14px; }
+    .qrbox .c4 { right: 8px; bottom: 8px; border-left: 0; border-top: 0; border-radius: 0 0 14px 0; }
+    @keyframes scanmove { 0%, 100% { top: 30px; } 50% { top: calc(100% - 34px); } }
+    .url { font-size: 34px; font-weight: 900; color: var(--accent); letter-spacing: -0.01em; }
+
+    /* 메모 패널 */
+    #main { flex: 1; display: flex; min-height: 0; }
+    #memo { display: none; width: 360px; flex-shrink: 0; border-left: 1px solid var(--line); background: #fffbeb; padding: 20px 22px; overflow: auto; user-select: text; }
+    body.memo #memo { display: block; }
+    #memo .mt { font-size: 14px; font-weight: 900; color: var(--amber); letter-spacing: .04em; margin-bottom: 4px; }
+    #memo h3 { font-size: 22px; font-weight: 900; margin-bottom: 14px; }
+    #memo ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    #memo li { font-size: 18px; line-height: 1.55; color: var(--ink); padding-left: 18px; position: relative; }
+    #memo li::before { content: '▸'; position: absolute; left: 0; color: var(--amber); }
+    #memo li em { font-style: normal; font-weight: 900; color: var(--accent); }
+    #memo .nx { margin-top: 18px; padding-top: 12px; border-top: 1px dashed #fcd34d; font-size: 15px; color: var(--sub); }
+
+    /* 전체화면: 하단 바는 마우스를 올릴 때만 */
+    body.fs #bar { opacity: 0; transition: opacity .25s; }
+    body.fs #bar:hover { opacity: 1; }
 
     /* 하단 컨트롤 */
     #bar { height: 48px; flex-shrink: 0; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: #fff; }
@@ -130,12 +163,13 @@
     #dots { display: flex; gap: 7px; align-items: center; }
     #dots i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; cursor: pointer; }
     #dots i.on { background: var(--accent); transform: scale(1.3); }
-    #count { font-size: 14px; font-weight: 700; color: var(--mute); width: 70px; text-align: right; }
+    #count { font-size: 14px; font-weight: 700; color: var(--mute); width: 64px; text-align: right; }
+    #bar button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
   </style>
 </head>
 <body>
 
-<div id="viewport"><div id="stage">
+<div id="main"><div id="viewport"><div id="stage">
 
   <!-- 1. 표지 -->
   <section class="slide cover active">
@@ -143,7 +177,7 @@
       <div class="badge rise">AI 팩트체크 솔루션 · 판독 웹서비스</div>
       <h1 class="rise" style="--d:.1s">TruthLens AI<br><span>판독</span></h1>
       <p class="rise" style="--d:.2s">멀티미디어 콘텐츠 통합 분석으로 완벽한 신뢰성 검증을 제공하는 AI 팩트체크 솔루션</p>
-      <div class="team rise" style="--d:.3s"><span>작성자: 박제용</span><span>김무성</span><span>황채윤</span></div>
+      <div class="team rise" style="--d:.3s"><span>박제용</span><span>김무성</span><span>황채윤</span></div>
     </div>
     <div class="viz" style="width:440px">
       <svg viewBox="0 0 420 420" width="440" height="440">
@@ -169,9 +203,34 @@
     </div>
   </section>
 
+  <!-- 2. 팀원 소개 -->
+  <section class="slide roomy">
+    <div class="head"><div class="bar"></div><h2>팀원 소개</h2><span class="sub">세 명이 역할을 나눠 만들었습니다</span><div class="no"></div></div>
+    <div class="body cols-3" style="grid-template-rows:1fr">
+      <div class="card rise" style="align-items:center;justify-content:center;text-align:center">
+        <div class="avatar" style="--c:var(--accent)">박</div>
+        <h3 style="margin-top:18px">박제용</h3>
+        <span class="tag" style="margin:4px 0 16px">슬라이드 제작 · 발표</span>
+        <p>오늘 발표 자료(슬라이드)를 기획하고 제작했습니다. 프로젝트 전체 흐름을 정리해 오늘 <b>발표를 맡았습니다.</b></p>
+      </div>
+      <div class="card rise" style="--d:.15s;align-items:center;justify-content:center;text-align:center">
+        <div class="avatar" style="--c:var(--emerald)">김</div>
+        <h3 style="margin-top:18px">김무성</h3>
+        <span class="tag" style="margin:4px 0 16px;background:#d1fae5;color:var(--emerald)">웹 자체 개발</span>
+        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 화면부터 AI 연동까지 서비스가 실제로 돌아가게 만드는 작업입니다.</p>
+      </div>
+      <div class="card rise" style="--d:.3s;align-items:center;justify-content:center;text-align:center">
+        <div class="avatar" style="--c:var(--violet)">황</div>
+        <h3 style="margin-top:18px">황채윤</h3>
+        <span class="tag" style="margin:4px 0 16px;background:#ede9fe;color:var(--violet)">웹 자체 개발</span>
+        <p>TruthLens AI <b>웹 서비스 자체 개발</b>을 맡았습니다. 개선된 입력 화면과 결과 리포트, 배포까지 함께 만들었습니다.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- 2. 프로젝트 한눈에 -->
   <section class="slide">
-    <div class="head"><div class="bar"></div><h2>프로젝트 한눈에 보기</h2><div class="no">02</div></div>
+    <div class="head"><div class="bar"></div><h2>프로젝트 한눈에 보기</h2><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 520px;">
       <div class="stack">
         <p class="lead rise"><b>TruthLens AI 판독</b>은 의심스러운 뉴스·유튜브·루머를 입력하면 AI가 진위 여부를 판단하고, 신뢰도를 <b>점수</b>로 보여 주는 웹서비스입니다. 저희 세 명이 8월에 틀을 만들고, 9~10월 고도화를 거쳐 실제로 돌아가는 서비스로 완성했습니다.</p>
@@ -181,7 +240,7 @@
             <li><b>문제와 해결 계획</b> — 왜 가짜뉴스 판독 서비스가 필요한가, 어떻게 풀려고 했는가</li>
             <li><b>8월까지의 결과물</b> — 입력·처리·출력 구조, 환각 방지 설계, 초기 UI와 한계</li>
             <li><b>고도화와 Before / After</b> — 멘토링 이후 무엇이 어떻게 바뀌었는가</li>
-            <li><b>라이브 시연과 배포</b> — 직접 입력해 보고, 결과 이미지를 공유하고, QR로 접속</li>
+            <li><b>라이브 시연과 배포</b> — QR로 접속해 직접 입력해 보고, 결과 이미지를 공유</li>
           </ul>
         </div>
       </div>
@@ -196,7 +255,7 @@
 
   <!-- 3. 문제 정의 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>문제 정의</h2><span class="sub">그럴듯해서 더 위험한 가짜뉴스</span><div class="no">03</div></div>
+    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>문제 정의</h2><span class="sub">그럴듯해서 더 위험한 가짜뉴스</span><div class="no"></div></div>
     <div class="body split" style="grid-template-columns: 1fr 440px;">
       <div class="stack">
         <p class="lead rise">지금은 <b style="color:var(--rose)">가짜뉴스가 너무 판을 치고 있습니다.</b> 실제 뉴스처럼 매우 그럴듯하게 만들어져 있어 사람이 쉽게 속고, 한 번 퍼지면 되돌리기도 어렵습니다.</p>
@@ -233,7 +292,7 @@
 
   <!-- 4. 기존 검증의 한계 -->
   <section class="slide mid">
-    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>기존 검증 방식의 한계</h2><span class="sub">그래서 자동 검증이 필수입니다</span><div class="no">04</div></div>
+    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>기존 검증 방식의 한계</h2><span class="sub">그래서 자동 검증이 필수입니다</span><div class="no"></div></div>
     <div class="body split" style="grid-template-columns: 1fr 460px;">
       <div class="stack">
         <div class="card rise">
@@ -274,7 +333,7 @@
 
   <!-- 5. 해결 계획 3가지 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>해결 계획</h2><span class="sub">크게 세 가지를 계획했습니다</span><div class="no">05</div></div>
+    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>해결 계획</h2><span class="sub">크게 세 가지를 계획했습니다</span><div class="no"></div></div>
     <div class="body cols-3" style="grid-template-rows: 1fr;">
       <div class="card rise">
         <svg viewBox="0 0 120 60" width="150" height="75" style="margin-bottom:10px">
@@ -313,7 +372,7 @@
 
   <!-- 6. 8월 솔루션: 입력 처리 출력 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>8월까지의 솔루션</h2><span class="sub">입력 → 처리 → 출력</span><div class="no">06</div></div>
+    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>8월까지의 솔루션</h2><span class="sub">입력 → 처리 → 출력</span><div class="no"></div></div>
     <svg viewBox="0 0 1136 100" width="1136" height="100" style="flex-shrink:0;margin-bottom:18px">
       <g font-size="26" font-weight="900" text-anchor="middle">
         <rect x="0" y="14" width="330" height="72" rx="36" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><text x="165" y="60" fill="#4f46e5">입력</text>
@@ -334,7 +393,7 @@
 
   <!-- 7. 환각 방지 / 한계 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>환각 방지 설계와 8월의 한계</h2><div class="no">07</div></div>
+    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>환각 방지 설계와 8월의 한계</h2><div class="no"></div></div>
     <div class="body cols-2" style="grid-template-columns: 1.15fr 1fr;">
       <div class="card rise">
         <h3 style="display:flex;align-items:center;gap:12px">
@@ -362,39 +421,39 @@
     </div>
   </section>
 
-  <!-- 8. 8월 초기 UI -->
+  <!-- 9. 8월 초기 UI -->
   <section class="slide">
-    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>8월 결과물</h2><span class="sub">겉으로 보이는 틀부터 만들었습니다</span><div class="no">08</div></div>
-    <div class="body" style="grid-template-columns: 340px 1fr; gap: 40px;">
+    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>8월 결과물</h2><span class="sub">NLP 엔진 중심의 첫 화면</span><div class="no"></div></div>
+    <div class="body" style="grid-template-columns: 350px 1fr; gap: 40px;">
       <div class="viz" style="align-items:flex-start">
-        <div class="phone rise" style="width:330px;height:512px;border-color:#cbd5e1">
-          <img src="img/aug-home.png" alt="8월 초기 UI" style="height:100%;object-fit:cover;object-position:top">
-          <div class="mk" style="left:8px;top:140px">1</div>
-          <div class="mk" style="left:8px;top:284px;animation-delay:.3s">2</div>
-          <div class="mk" style="left:8px;top:400px;animation-delay:.6s">3</div>
+        <div class="phone rise" style="width:340px;border-radius:20px;border-color:#cbd5e1">
+          <img src="img/aug-before.png" alt="8월 초기 UI">
+          <div class="mk" style="left:8px;top:112px">1</div>
+          <div class="mk" style="left:8px;top:240px;animation-delay:.3s">2</div>
+          <div class="mk" style="left:8px;top:386px;animation-delay:.6s">3</div>
         </div>
       </div>
       <div class="stack">
         <div class="card rise" style="--d:.1s">
-          <h4><span class="num" style="--c:var(--blue)">1</span>입력 UI 구성</h4>
-          <p><b>기사, 커뮤니티 소문, 유튜브·쇼츠 URL</b>을 구분해서 넣을 수 있게 설계했습니다. 입력창은 비어 있고, 아래에 붙여넣기·링크 버튼을 두었습니다.</p>
+          <h4><span class="num" style="--c:var(--blue)">1</span>분석 엔진 안내</h4>
+          <p>상단에 <b>NLP 엔진</b> 배지와 "TextRank 요약 &amp; 4대 다차원 진단 알고리즘" 문구를 두었습니다. 출처·어그로성·증거 수치·논리 구조를 평가한다고 설명하는 카드입니다.</p>
         </div>
         <div class="card rise" style="--d:.2s">
-          <h4><span class="num" style="--c:var(--blue)">2</span>팩트체크 진행 사항 표시</h4>
-          <p>검증이 어떤 순서로 진행되는지 보여 주는 틀입니다. 화면 아래의 <b>1. 입력하기 → 2. 실시간 웹 교차 검증 → 3. 검증 결과 확인</b> 세 단계 안내 카드가 그 역할을 했습니다.</p>
+          <h4><span class="num" style="--c:var(--blue)">2</span>입력 UI 구성</h4>
+          <p><b>'뉴스/텍스트 분석'과 '유튜브 판독'</b> 두 탭으로 입력 종류를 나눴습니다. 기사 URL이나 글을 붙여 넣는 큰 입력창과 <b>'붙여넣기' 버튼</b>이 있습니다.</p>
         </div>
         <div class="card rise" style="--d:.3s">
-          <h4><span class="num" style="--c:var(--blue)">3</span>판독 결과 틀</h4>
-          <p>신뢰도 점수, 출처 근거, 3줄 핵심 요약이 들어갈 <b>결과 화면의 뼈대</b>를 만들었습니다. 이 시점에는 안에 채워질 실제 판독 값이 없었습니다.</p>
+          <h4><span class="num" style="--c:var(--blue)">3</span>판독 시작과 결과 틀</h4>
+          <p>맨 아래 <b>'TruthLens 정밀 진위 판독하기'</b> 버튼으로 시작하고, 결과가 들어갈 화면의 틀도 함께 만들었습니다. 오른쪽 위에는 <b>API키 선택</b> 버튼이 있었습니다.</p>
         </div>
-        <div class="card hl rise" style="--d:.4s"><p style="color:var(--ink)"><b>돌아보면</b> — 처음 보는 사용자는 빈 입력창 앞에서 <b>무엇을 물어봐야 할지</b> 몰랐습니다. 이 문제가 다음 개선의 출발점이 되었습니다.</p></div>
+        <div class="card hl rise" style="--d:.4s"><p style="color:var(--ink)"><b>돌아보면</b> — 기술 용어와 API키 선택이 먼저 보여서 <b>처음 보는 사용자는 무엇을 해야 할지</b> 알기 어려웠습니다. 이 문제가 다음 개선의 출발점이 되었습니다.</p></div>
       </div>
     </div>
   </section>
 
   <!-- 9. 기대 효과 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--amber)"></div><h2>기대 효과</h2><span class="sub">8월에 그렸던 방향</span><div class="no">09</div></div>
+    <div class="head"><div class="bar" style="--c:var(--amber)"></div><h2>기대 효과</h2><span class="sub">8월에 그렸던 방향</span><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr 360px; gap: 22px;">
       <div class="card rise">
         <h3 style="color:var(--emerald)">사회 효과</h3>
@@ -434,7 +493,7 @@
 
   <!-- 10. 고도화 타임라인 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--accent)"></div><h2>틀에서 서비스로</h2><span class="sub">8월 → 9~10월 고도화 → 배포</span><div class="no">10</div></div>
+    <div class="head"><div class="bar" style="--c:var(--accent)"></div><h2>틀에서 서비스로</h2><span class="sub">8월 → 9~10월 고도화 → 배포</span><div class="no"></div></div>
     <svg viewBox="0 0 1136 80" width="1136" height="80" style="flex-shrink:0;margin-bottom:10px">
       <line x1="189" y1="40" x2="947" y2="40" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/>
       <line class="dashing" x1="189" y1="40" x2="947" y2="40" stroke="#4f46e5" stroke-width="4"/>
@@ -447,7 +506,7 @@
       <div class="card rise">
         <h3>8월 · 틀 만들기</h3>
         <ul>
-          <li>입력 UI, 진행 표시, 결과 화면 틀 완성</li>
+          <li>NLP(TextRank) 엔진 화면, 입력 UI, 결과 화면 틀 완성</li>
           <li>입력 → 처리 → 출력 구조와 환각 방지 알고리즘 설계</li>
           <li><b>내부 판독 알고리즘은 미완성</b></li>
         </ul>
@@ -471,37 +530,39 @@
     </div>
   </section>
 
-  <!-- 11. Before / After 입력 화면 -->
+  <!-- 12. Before / After 입력 화면 -->
   <section class="slide">
-    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>Before → After</h2><span class="sub">입력 화면은 이렇게 바뀌었습니다</span><div class="no">11</div></div>
-    <div class="ba" style="flex:1;min-height:0">
+    <div class="head"><div class="bar" style="--c:var(--emerald)"></div><h2>Before → After</h2><span class="sub">8월 첫 화면에서 지금까지 바뀐 것</span><div class="no"></div></div>
+    <div class="ba" style="flex:1;min-height:0;grid-template-columns:300px 1fr 240px;gap:22px">
       <div class="col rise">
         <span class="lab" style="background:#ffe4e6;color:var(--rose)">BEFORE · 8월</span>
-        <div class="phone crop" style="width:250px;height:400px"><img src="img/aug-home.png" alt="8월 입력 화면"></div>
+        <div class="phone" style="width:300px;border-radius:16px"><img src="img/aug-before.png" alt="8월 입력 화면"></div>
       </div>
-      <div class="rows4 rise" style="--d:.2s;align-self:center">
-        <div class="r4"><div class="b"><em>빈 입력창</em>뭘 물어봐야 할지 몰라 멈춤</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>예시 문장 + 예시 질문 3개</em>선풍기·양파·"물은 답을 알고 있다"를 누르면 자동 입력</div></div>
-        <div class="r4"><div class="b"><em>버튼 3개</em>붙여넣기·링크·검증하기가 섞여 있음</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>'지금 검증하기' 하나</em>붙여넣기·링크 버튼을 없애 원클릭에 집중</div></div>
-        <div class="r4"><div class="b"><em>안내가 먼저</em>3단계 설명 카드가 입력창 바로 아래</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>해보기가 먼저</em>예시를 먼저 보여 주고, 설명은 그 아래로 이동</div></div>
-        <div class="r4"><div class="b"><em>서비스 소개 없음</em>화면만 있고 설명할 곳이 없음</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>상단 '소개' 버튼</em>프로젝트 소개 페이지로 바로 이동</div></div>
-        <p style="font-size:16px;color:var(--sub);line-height:1.55;margin-top:4px"><b style="color:var(--ink)">분석</b> — 핵심은 기능을 더한 것이 아니라 <b style="color:var(--ink)">첫 사용자의 망설임을 줄인 것</b>입니다. 결정해야 할 것(버튼)은 줄이고, 시작할 이유(예시)는 늘렸습니다.</p>
+      <div class="rows4 rise" style="--d:.2s;align-self:center;gap:8px">
+        <div class="r4"><div class="b"><em>기술 용어 중심 화면</em>NLP 엔진 · TextRank · 4대 다차원 진단</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>쉬운 한 문장</em>"진실을 실시간 검증하세요"로 목적을 바로 전달</div></div>
+        <div class="r4"><div class="b"><em>API키 선택 버튼</em>사용자가 직접 키를 골라야 시작</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>키 입력 없음</em>서버(Vercel)가 AI 호출을 처리해 바로 사용</div></div>
+        <div class="r4"><div class="b"><em>탭 2개 + 붙여넣기</em>뉴스/텍스트 · 유튜브 탭을 먼저 골라야 함</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>입력창 하나</em>질문·기사·소문 어느 것이든 그대로 입력</div></div>
+        <div class="r4"><div class="b"><em>빈 입력창</em>URL 예시만 있고 무엇을 물어볼지 막막함</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>예시 질문 3개</em>선풍기·양파·"물은 답을 알고 있다" 클릭 시 자동 입력</div></div>
+        <div class="r4"><div class="b"><em>긴 버튼 문구</em>"TruthLens 정밀 진위 판독하기"</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>지금 검증하기</em>버튼 하나로 단순화, 소개 버튼 추가</div></div>
+        <div class="r4"><div class="b"><em>결과 틀 위주</em>알고리즘이 비어 있는 상태</div><svg viewBox="0 0 24 24"><path d="M5 12h14m-5-6l6 6-6 6" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="a"><em>점수·요약·3줄 요약</em>AI 판독 결과 + 이미지(JPG) 저장·공유</div></div>
+        <p style="font-size:15px;color:var(--sub);line-height:1.5;margin-top:2px"><b style="color:var(--ink)">분석</b> — 기능을 더한 것보다 <b style="color:var(--ink)">첫 사용자가 결정할 것(키·탭·버튼)을 줄인 것</b>이 핵심입니다.</p>
       </div>
       <div class="col rise" style="--d:.1s">
         <span class="lab" style="background:#d1fae5;color:var(--emerald)">AFTER · 현재</span>
-        <div class="phone crop" style="width:250px;height:400px"><img src="img/now-home.png" alt="현재 입력 화면"></div>
+        <div class="phone crop" style="width:240px;height:380px"><img src="img/now-home.png" alt="현재 입력 화면"></div>
       </div>
     </div>
   </section>
 
-  <!-- 12. 시연 1 -->
+  <!-- 13. 개선 사용 흐름 -->
   <section class="slide">
-    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>시연 ①</h2><span class="sub">질문 입력부터 검증 진행까지</span><div class="no">12</div></div>
+    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>개선 ② 사용 흐름</h2><span class="sub">입력 → 검증 진행 → 결과</span><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 340px; gap: 30px;">
       <div style="display:flex;flex-direction:column;min-height:0">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:46px;position:relative">
-          <div class="rise"><div class="phone crop" style="height:300px"><img src="img/run-0.png" alt="입력"></div><div class="cap">1. 입력하기<small>예시 질문을 누르면 입력창에 자동으로 채워집니다</small></div></div>
-          <div class="rise" style="--d:.2s"><div class="phone crop" style="height:300px"><img src="img/run-2.png" alt="진행"></div><div class="cap">2. 실시간 검증 진행<small>단계별 안내 문구가 바뀌며 분석 상태를 보여 줍니다</small></div></div>
-          <div class="rise" style="--d:.4s"><div class="phone crop" style="height:300px"><img src="img/run-3.png" alt="진행 3"></div><div class="cap">3. 점수 산출 중<small>출처·신뢰 지표를 종합해 최종 점수를 계산합니다</small></div></div>
+          <div class="rise"><div class="phone"><img src="img/run-0.png" alt="입력"></div><div class="cap">1. 입력하기<small>예시 질문을 누르면 입력창에 자동으로 채워집니다</small></div></div>
+          <div class="rise" style="--d:.2s"><div class="phone"><img src="img/run-2.png" alt="진행"></div><div class="cap">2. 실시간 검증 진행<small>단계별 안내 문구가 바뀌며 분석 상태를 보여 줍니다</small></div></div>
+          <div class="rise" style="--d:.4s"><div class="phone"><img src="img/run-3.png" alt="진행 3"></div><div class="cap">3. 점수 산출 중<small>출처·신뢰 지표를 종합해 최종 점수를 계산합니다</small></div></div>
           <svg viewBox="0 0 40 40" width="36" height="36" style="position:absolute;left:calc(33.3% - 33px);top:130px"><path d="M8 20h22m-8-9l9 9-9 9" fill="none" stroke="#4f46e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="hop" style="animation-name:blink"/></svg>
           <svg viewBox="0 0 40 40" width="36" height="36" style="position:absolute;left:calc(66.6% - 13px);top:130px"><path d="M8 20h22m-8-9l9 9-9 9" fill="none" stroke="#4f46e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="blink" style="animation-delay:.5s"/></svg>
         </div>
@@ -520,37 +581,54 @@
         <div class="card flex1 hl rise" style="--d:.2s">
           <h4>예시 질문 3개</h4>
           <ul><li>선풍기 틀고 자면 죽나요?</li><li>양파를 비난하면 정말 덜 자라나요?</li><li>'물은 답을 알고 있다'는 책이 진실인가요?</li></ul>
-          <p style="margin-top:10px;font-size:16px">오늘은 <b>첫 번째 질문</b>으로 시연합니다.</p>
+          <p style="margin-top:10px;font-size:16px">곧 이어서 <b>직접 시연</b>해 보겠습니다.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 13. 시연 2: 결과 -->
+  <!-- 14. 개선 결과 -->
   <section class="slide">
-    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>시연 ②</h2><span class="sub">결과 리포트 읽는 법</span><div class="no">13</div></div>
+    <div class="head"><div class="bar" style="--c:var(--blue)"></div><h2>개선 ③ 결과 리포트</h2><span class="sub">결과 읽는 법</span><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 330px 1fr; gap: 38px;">
       <div class="viz" style="align-items:flex-start">
         <div class="phone crop rise" style="width:330px;height:540px">
           <img src="img/now-report.png" alt="결과 리포트">
-          <div class="mk" style="left:8px;top:108px">1</div>
-          <div class="mk" style="left:8px;top:196px;animation-delay:.3s">2</div>
-          <div class="mk" style="left:8px;top:280px;animation-delay:.6s">3</div>
-          <div class="mk" style="left:8px;top:460px;animation-delay:.9s">4</div>
+          <div class="mk" style="left:8px;top:155px">1</div>
+          <div class="mk" style="left:8px;top:236px;animation-delay:.3s">2</div>
+          <div class="mk" style="left:8px;top:305px;animation-delay:.6s">3</div>
+          <div class="mk" style="left:8px;top:436px;animation-delay:.9s">4</div>
         </div>
       </div>
       <div class="stack">
-        <div class="card rise"><h4><span class="num" style="--c:var(--rose)">1</span>점수와 상태 — 10 / 100 · 심각한 위험</h4><p>"선풍기 틀고 자면 죽나요?"의 신뢰도 점수는 <b>10점</b>, 상태는 <b>'과학적 근거 없는 도시 괴담'</b>으로 나왔습니다. 점수가 낮을수록 위험한 정보입니다.</p></div>
-        <div class="card rise" style="--d:.1s"><h4><span class="num" style="--c:var(--amber)">2</span>태그</h4><p><b>선풍기괴담 · 유사과학 · 의학적근거없음</b> — 어떤 종류의 정보인지 한눈에 분류해 줍니다.</p></div>
+        <div class="card rise"><h4><span class="num" style="--c:var(--rose)">1</span>점수와 상태 — 낮을수록 위험</h4><p>"선풍기 틀고 자면 죽나요?"는 여러 번 돌려도 <b>0~10점</b>의 최하위권, 상태는 <b>'근거 없는 괴담'</b> 계열로 나옵니다. AI가 매번 새로 판단해 문구와 점수는 조금씩 달라질 수 있습니다.</p></div>
+        <div class="card rise" style="--d:.1s"><h4><span class="num" style="--c:var(--amber)">2</span>태그</h4><p><b>선풍기괴담 · 유사과학 · 도시전설 · 의학적근거없음</b> — 어떤 종류의 정보인지 한눈에 분류해 줍니다.</p></div>
         <div class="card rise" style="--d:.2s"><h4><span class="num" style="--c:var(--accent)">3</span>AI Diagnostic Report</h4><p>왜 그렇게 판단했는지 설명하는 총평입니다. 이 사례는 실제로 그런 일이 확인된 적이 없는 대표적 괴담이라, <b>과학적 타당성이 없는 거짓 정보</b>로 평가했습니다.</p></div>
         <div class="card hl rise" style="--d:.3s"><h4><span class="num" style="--c:var(--emerald)">4</span>AI 3줄 검증 요약</h4><p>핵심 결론, 근거와 한계, 유의사항을 <b>세 줄</b>로 정리합니다. 바쁜 사용자는 이 세 줄만 읽어도 판단할 수 있습니다.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- 14. 공유 + 배포 -->
+  <!-- 15. 라이브 시연 -->
+  <section class="slide mid">
+    <div class="head"><div class="bar" style="--c:var(--rose)"></div><h2>라이브 시연</h2><span class="sub">QR로 접속해서 직접 해 봅니다</span><div class="no"></div></div>
+    <div class="body" style="grid-template-columns: 500px 1fr; gap: 44px;">
+      <div class="viz" style="flex-direction:column;gap:12px">
+        <div class="qrbox rise"><img src="img/qr.svg" alt="TruthLens AI 접속 QR"><i class="scan"></i><b class="c1"></b><b class="c2"></b><b class="c3"></b><b class="c4"></b></div>
+        <div class="url rise" style="--d:.2s">truthlen-ai.vercel.app</div>
+      </div>
+      <div class="stack">
+        <div class="card rise"><h4><span class="num" style="--c:var(--rose)">1</span>QR 스캔해서 접속</h4><p>휴대폰 카메라로 QR을 비추면 바로 열립니다. <b>24시간</b> 언제든 접속할 수 있습니다.</p></div>
+        <div class="card rise" style="--d:.1s"><h4><span class="num" style="--c:var(--amber)">2</span>질문 선택 또는 입력</h4><p>예시 질문(<b>선풍기 · 양파 · 물은 답을 알고 있다</b>)을 누르면 자동 입력됩니다. 직접 써도 됩니다.</p></div>
+        <div class="card rise" style="--d:.2s"><h4><span class="num" style="--c:var(--emerald)">3</span>'지금 검증하기' 누르고 대기</h4><p>단계별 진행 문구가 바뀌며 분석합니다. 보통 <b>30초 안에</b> 결과가 나옵니다.</p></div>
+        <div class="card hl rise" style="--d:.3s"><h4><span class="num">4</span>결과 확인 · 이미지 저장</h4><p>점수 → 요약 → 3줄 요약을 확인하고, 리포트를 <b>이미지로 저장해 공유</b>할 수 있습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16. 공유 + 배포 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>이미지 공유와 배포</h2><span class="sub">알게 된 진실을 다른 사람에게</span><div class="no">14</div></div>
+    <div class="head"><div class="bar" style="--c:var(--violet)"></div><h2>이미지 공유와 배포</h2><span class="sub">알게 된 진실을 다른 사람에게</span><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 250px 330px; gap: 30px;">
       <div class="stack">
         <svg viewBox="0 0 420 110" width="420" height="110" style="flex-shrink:0">
@@ -573,22 +651,18 @@
         <div class="phone rise" style="width:250px;height:470px;border-radius:18px;background:#0d0f17"><img src="img/share-card.jpg" alt="저장된 리포트 이미지" style="height:100%;object-fit:cover;object-position:top"></div>
       </div>
       <div class="stack">
-        <div class="card hl rise" style="--d:.15s;align-items:center;text-align:center">
-          <img src="img/qr.svg" alt="QR" style="width:180px;height:180px;image-rendering:pixelated">
-          <h4 style="justify-content:center;margin:10px 0 0">truthlen-ai.vercel.app</h4>
-          <p style="font-size:16px">지금 QR로 접속해 보세요</p>
-        </div>
+        <div class="card hl rise" style="--d:.15s"><h4>접속 주소</h4><p style="font-weight:900;color:var(--accent);font-size:22px">truthlen-ai.vercel.app</p><p>누구나 브라우저에서 바로 접속할 수 있습니다.</p></div>
         <div class="card flex1 rise" style="--d:.3s">
           <h4>24시간 배포</h4>
-          <p>오늘만 작동하는 데모가 아니라, <b>집에서도 언제든</b> 접속할 수 있도록 배포했습니다.</p>
+          <p>오늘만 작동하는 데모가 아니라, <b>집에서도 언제든</b> 접속할 수 있도록 배포했습니다. 앞으로도 계속 고도화합니다.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 15. 마무리 -->
+  <!-- 17. 마무리 -->
   <section class="slide roomy">
-    <div class="head"><div class="bar" style="--c:var(--accent)"></div><h2>배운 점과 앞으로</h2><div class="no">15</div></div>
+    <div class="head"><div class="bar" style="--c:var(--accent)"></div><h2>배운 점과 앞으로</h2><div class="no"></div></div>
     <div class="body" style="grid-template-columns: 1fr 340px; gap: 34px;">
       <div class="stack">
         <div class="card rise">
@@ -620,12 +694,18 @@
   </section>
 
 </div></div>
+<aside id="memo"><div class="mt">발표 메모</div><h3 id="memoTitle"></h3><ul id="memoList"></ul><div class="nx" id="memoNext"></div></aside>
+</div>
 
 <div id="bar">
   <button id="prev">이전</button>
   <div id="dots"></div>
-  <span id="count"></span>
-  <button id="next">다음</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="count"></span>
+    <button id="memoBtn" title="메모 켜기/끄기 (M)">메모</button>
+    <button id="fsBtn" title="전체화면 (F)">전체화면</button>
+    <button id="next">다음</button>
+  </div>
 </div>
 
 <script>
@@ -635,13 +715,49 @@
   const dots = document.getElementById('dots');
   const prev = document.getElementById('prev');
   const next = document.getElementById('next');
+  const memoBtn = document.getElementById('memoBtn');
+  const fsBtn = document.getElementById('fsBtn');
   let cur = 0;
 
-  slides.forEach((_, i) => {
+  // 슬라이드별 키워드 대본 (메모 패널)
+  const MEMO = [
+    ['<em>인사</em> · 팀 3명 · 발표 박제용', '<em>트루스렌즈 AI 판독</em> 웹서비스', '멀티미디어 콘텐츠 <em>통합 분석</em>', '<em>완벽한 신뢰성 검증</em> · AI 팩트체크 솔루션'],
+    ['팀 <em>3명</em> · 각자 맡은 파트', '<em>박제용</em> — 슬라이드 제작 · 발표', '<em>김무성</em> — 웹 자체 개발', '<em>황채윤</em> — 웹 자체 개발'],
+    ['의심 정보 입력 → <em>진위 + 신뢰도 점수</em>', '8월 <em>틀</em> → 9~10월 <em>고도화</em>(멘토링)', '결과까지 <em>약 30초</em>', '<em>24시간 배포</em> · QR 접속', '순서: 문제 → 8월 → 개선 → 시연'],
+    ['<em>가짜뉴스</em>가 너무 판침', '너무 <em>그럴듯해서</em> 쉽게 속음', '의학 · 금융 · 정치 허위정보', '<em>AI로 먼저 검증</em> · 최신 내용까지', '→ 그런 알고리즘을 만들어 보자'],
+    ['기존 검증: <em>개별 확인</em> · 시간 소모', '<em>일반 사용자</em>에게 어려움 · 메모만 하다 포기', '해결 방향: <em>텍스트 하나 · 질문 하나</em>', '→ 즉시 <em>진위 판단 + 점수</em>'],
+    ['계획 <em>세 가지</em>', '① 뉴스 + <em>유튜브 · 쇼츠</em> 통합, 자막·음성 자동 추출 → 텍스트 검증', '② <em>원문 추적</em> · 출처 신뢰도 · 전문가 의견 · 공식 자료 대조', '③ 붙여넣기 → <em>원클릭</em> 즉시 결과'],
+    ['8월: <em>입력 → 처리 → 출력</em>', '입력: URL · 텍스트 · 이미지', '처리: 메타데이터 · 핵심 개체 · oEmbed · 썸네일 · 출처/키워드 신뢰도', '출력: <em>3줄 요약 · 진실성 점수 · 자극성 지수</em> → 종합 리포트'],
+    ['<em>환각 방지</em> 설계(구상)', 'LLM 단독 응답 <em>배제</em>', '언론사 DB · 아카이브 <em>대조</em>', '공공 데이터(위키 · 기상청 · 경찰청)', '<em>한계</em>: 내부 알고리즘 미완성 → 틀까지'],
+    ['8월 결과물 = <em>겉 UI</em> · NLP 엔진 화면', '입력 UI: 뉴스/텍스트 · <em>유튜브 판독</em> 탭', '진행 사항 · 결과 틀', '문제: API키 선택 · 용어 → <em>뭘 해야 할지 모름</em>'],
+    ['사회: <em>검증 능력 · 내성 향상</em>', '품질 개선 · <em>커뮤니티 신뢰</em> · 피해 예방', '확장: <em>B2B</em> · API 연동 플래그', '<em>Chrome 확장</em> · 모바일 앱', '→ 전 세계 누구나'],
+    ['8월 틀 → 9월 <em>멘토링</em> → 10월 배포', '<em>실제로 되는 제품</em>', 'Gemini API · 서버 연동', '입력 UI 단순화 · 예시 질문 · 이미지 공유'],
+    ['<em>Before → After</em> · 어디를 해야 할지 몰랐다', '기술 용어 · <em>API키 선택</em> 제거', '탭 2개 → <em>입력창 하나</em>', '예시 3개: 선풍기 · 양파 · 물은 답을 알고 있다', '긴 버튼 → <em>지금 검증하기</em> · 소개 버튼', '결과: 점수 · 요약 · 3줄 요약 · 이미지 공유'],
+    ['<em>1 입력 → 2 검증 → 3 결과</em>', '진행 문구 단계별 변경', '보통 <em>30초</em>', '예시 질문 → 자동 입력'],
+    ['점수 → 상태 · 태그 → 진단 → <em>3줄 요약</em>', '선풍기 괴담: 실제 <em>사례 없음</em>', '<em>과학적 타당성 없는</em> 거짓 정보', '→ 이제 <em>직접 해 보겠습니다</em>'],
+    ['<em>QR 크게</em> — 접속 안내', '① QR 스캔 ② 예시 질문 선택 ③ 지금 검증하기', '30초 대기 → 결과', '점수 · 요약 · 3줄 요약 설명', '마지막: <em>이미지 저장 · 공유</em>'],
+    ['이미지 저장 → <em>카톡 공유</em>', '깔끔한 UI로 읽고 <em>서비스 홍보</em>', '<em>24시간 배포</em> · 집에서도 접속', '앞으로 계속 고도화'],
+    ['처음부터 끝까지 <em>서비스 제작 경험</em>', '다음 서비스에 <em>그대로 활용</em>', '앞으로 <em>더 많은 팩트체크</em>', '가짜뉴스 <em>사회적 비용</em> 절감', '<em>질문 · 개선사항</em> 환영 · 감사합니다']
+  ];
+
+  slides.forEach((s, i) => {
+    const no = s.querySelector('.head .no');
+    if (no) no.textContent = String(i + 1).padStart(2, '0');
     const d = document.createElement('i');
     d.onclick = () => go(i);
     dots.appendChild(d);
   });
+
+  function titleOf(i) {
+    const h = slides[i].querySelector('.head h2') || slides[i].querySelector('h1');
+    return h ? h.textContent.replace(/\s+/g, ' ').trim() : '';
+  }
+
+  function renderMemo() {
+    document.getElementById('memoTitle').textContent = `${cur + 1}. ${titleOf(cur)}`;
+    document.getElementById('memoList').innerHTML = (MEMO[cur] || []).map(t => `<li>${t}</li>`).join('');
+    document.getElementById('memoNext').textContent = cur < slides.length - 1 ? `다음 → ${titleOf(cur + 1)}` : '끝 · Q&A';
+  }
 
   function go(n) {
     if (n < 0 || n >= slides.length) return;
@@ -651,6 +767,7 @@
     document.getElementById('count').textContent = `${cur + 1} / ${slides.length}`;
     prev.disabled = cur === 0;
     next.disabled = cur === slides.length - 1;
+    renderMemo();
     history.replaceState(null, '', '#' + (cur + 1));
   }
 
@@ -659,14 +776,32 @@
     stage.style.transform = `translate(-50%, -50%) scale(${s})`;
   }
 
+  function toggleMemo() {
+    memoBtn.classList.toggle('on', document.body.classList.toggle('memo'));
+  }
+
+  function toggleFs() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  }
+
   prev.onclick = () => go(cur - 1);
   next.onclick = () => go(cur + 1);
-  addEventListener('resize', fit);
+  memoBtn.onclick = toggleMemo;
+  fsBtn.onclick = toggleFs;
+  new ResizeObserver(fit).observe(viewport);
+  document.addEventListener('fullscreenchange', () => {
+    document.body.classList.toggle('fs', !!document.fullscreenElement);
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+    fit();
+  });
   addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1); }
     if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
     if (e.key === 'Home') go(0);
     if (e.key === 'End') go(slides.length - 1);
+    if (e.key === 'f' || e.key === 'F') toggleFs();
+    if (e.key === 'm' || e.key === 'M') toggleMemo();
   });
   let x0 = 0;
   addEventListener('touchstart', e => { x0 = e.changedTouches[0].screenX; }, { passive: true });
